@@ -41,6 +41,11 @@ export class User extends CoreEntity {
   @Column()
   @Field(type => String)
   @IsString()
+  name: string;
+
+  @Column()
+  @Field(type => String)
+  @IsString()
   company: string;
 
   @Column({ nullable: true })

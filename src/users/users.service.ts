@@ -28,14 +28,31 @@ export class UserService {
     email,
     password,
     role,
+    name,
+    company,
+    team,
+    jobTitle,
+    bio,
   }: CreateAccountInput): Promise<CreateAccountOutput> {
     try {
       const exists = await this.users.findOne({ email });
       if (exists) {
         return { ok: false, error: '이미 동일한 email이 가입되어 있습니다.' };
       }
+      if (role === 'CEN') {
+        company = 'CoreEdge Networks';
+      }
       const user = await this.users.save(
-        this.users.create({ email, password, role }),
+        this.users.create({
+          email,
+          password,
+          role,
+          name,
+          company,
+          team,
+          jobTitle,
+          bio,
+        }),
       );
       const verification = await this.verifications.save(
         this.verifications.create({
@@ -98,7 +115,16 @@ export class UserService {
 
   async editProfile(
     userId: number,
-    { email, password }: EditProfileInput,
+    {
+      email,
+      password,
+      role,
+      name,
+      company,
+      team,
+      jobTitle,
+      bio,
+    }: EditProfileInput,
   ): Promise<EditProfileOutput> {
     try {
       const user = await this.users.findOne(userId);
@@ -113,6 +139,24 @@ export class UserService {
       }
       if (password) {
         user.password = password;
+      }
+      if (role) {
+        user.role = role;
+      }
+      if (name) {
+        user.name = name;
+      }
+      if (company) {
+        user.company = company;
+      }
+      if (team) {
+        user.team = team;
+      }
+      if (jobTitle) {
+        user.jobTitle = jobTitle;
+      }
+      if (bio) {
+        user.bio = bio;
       }
       await this.users.save(user);
       return {
