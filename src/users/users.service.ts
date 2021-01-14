@@ -140,13 +140,13 @@ export class UserService {
       if (password) {
         user.password = password;
       }
-      if (role) {
-        user.role = role;
-      }
       if (name) {
         user.name = name;
       }
       if (company) {
+        if (role === 'CEN') {
+          company = 'CoreEdge Networks';
+        }
         user.company = company;
       }
       if (team) {
