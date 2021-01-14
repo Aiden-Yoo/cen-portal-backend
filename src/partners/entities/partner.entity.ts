@@ -16,15 +16,14 @@ export class Partner extends CoreEntity {
   @Field(type => String)
   address: string;
 
+  @Column({ nullable: true })
+  @Field(type => String, { nullable: true })
+  zip?: string;
+
   @OneToMany(
     type => Contact,
     contact => contact.partner,
   )
   @Field(type => [Contact])
   contacts: Contact[];
-
-  @Column({ unique: true })
-  @Field(type => String)
-  @IsString()
-  slug: string;
 }
