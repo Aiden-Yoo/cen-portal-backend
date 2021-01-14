@@ -51,17 +51,17 @@ export class User extends CoreEntity {
   @Column({ nullable: true })
   @Field(type => String, { nullable: true })
   @IsString()
-  team: string;
+  team?: string;
 
   @Column({ nullable: true })
   @Field(type => String, { nullable: true })
   @IsString()
-  jobTitle: string;
+  jobTitle?: string;
 
   @Column({ nullable: true })
   @Field(type => String, { nullable: true })
   @IsString()
-  bio: string;
+  bio?: string;
 
   @Column({ default: false })
   @Field(type => Boolean)

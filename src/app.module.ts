@@ -9,6 +9,9 @@ import { JwtModule } from './jwt/jwt.module';
 import { AuthModule } from './auth/auth.module';
 import { Verification } from './users/entities/verification.entity';
 import { MailModule } from './mail/mail.module';
+import { PartnersModule } from './partners/partners.module';
+import { Partner } from './partners/entities/partner.entity';
+import { Contact } from './partners/entities/contact.entity';
 
 @Module({
   imports: [
@@ -41,7 +44,7 @@ import { MailModule } from './mail/mail.module';
       synchronize: process.env.NOTE_ENV !== 'prod',
       logging:
         process.env.NOTE_ENV !== 'prod' && process.env.NOTE_ENV !== 'test',
-      entities: [User, Verification],
+      entities: [User, Verification, Partner, Contact],
     }),
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
@@ -63,6 +66,7 @@ import { MailModule } from './mail/mail.module';
     }),
     AuthModule,
     UsersModule,
+    PartnersModule,
   ],
   controllers: [],
   providers: [],
