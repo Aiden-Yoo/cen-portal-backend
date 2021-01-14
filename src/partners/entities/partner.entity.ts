@@ -10,7 +10,7 @@ import { Contact } from './contact.entity';
 export class Partner extends CoreEntity {
   @Column()
   @Field(type => String)
-  partnerName: string;
+  name: string;
 
   @Column()
   @Field(type => String)
