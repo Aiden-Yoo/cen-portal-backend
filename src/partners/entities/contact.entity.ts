@@ -11,6 +11,14 @@ export class Contact extends CoreEntity {
   @Field(type => String)
   name: string;
 
+  @Column({ nullable: true })
+  @Field(type => String, { nullable: true })
+  team?: string;
+
+  @Column({ nullable: true })
+  @Field(type => String, { nullable: true })
+  jobTitle?: string;
+
   @Column()
   @Field(type => String)
   tel: string;
@@ -22,4 +30,7 @@ export class Contact extends CoreEntity {
   )
   @Field(type => Partner)
   partner: Partner;
+
+  // @RelationId((contact: Contact) => contact.partner)
+  // partnerId: number;
 }

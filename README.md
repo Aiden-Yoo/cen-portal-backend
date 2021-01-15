@@ -1,5 +1,6 @@
-### CEN Portal Backend with NestJS
+# CEN Portal Backend
 
+### with
 - NestJS
 - Typescript
 - GraphQL

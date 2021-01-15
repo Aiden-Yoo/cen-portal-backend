@@ -23,7 +23,8 @@ export class Partner extends CoreEntity {
   @OneToMany(
     type => Contact,
     contact => contact.partner,
+    { nullable: true },
   )
-  @Field(type => [Contact])
-  contacts: Contact[];
+  @Field(type => [Contact], { nullable: true })
+  contacts?: Contact[];
 }
