@@ -12,6 +12,7 @@ import { MailModule } from './mail/mail.module';
 import { PartnersModule } from './partners/partners.module';
 import { Partner } from './partners/entities/partner.entity';
 import { Contact } from './partners/entities/contact.entity';
+import { DevicesModule } from './devices/devices.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { Contact } from './partners/entities/contact.entity';
     AuthModule,
     UsersModule,
     PartnersModule,
+    DevicesModule,
   ],
   controllers: [],
   providers: [],
