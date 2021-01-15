@@ -13,10 +13,9 @@ export class Part extends CoreEntity {
   @IsString()
   name: string;
 
-  @Column()
-  @Field(type => String)
-  @IsString()
-  serialNumber: string;
+  @Column({ nullable: true })
+  @Field(type => String, { nullable: true })
+  serialNumber?: string;
 
   @ManyToOne(
     type => Bundle,
