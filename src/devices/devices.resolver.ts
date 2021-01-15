@@ -1,6 +1,9 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Query, Mutation, Resolver } from '@nestjs/graphql';
 import { Role } from 'src/auth/role.decorator';
 import { DeviceService } from './devices.service';
+import { AllBundlesInput, AllBundlesOutput } from './dtos/all-bundles.dto';
+import { AllPartsInput, AllPartsOutput } from './dtos/all-parts.dto';
+import { BundleInput, BundleOutput } from './dtos/bundle.dto';
 import {
   CreateBundleInput,
   CreateBundleOutput,
@@ -13,6 +16,12 @@ import {
 import { DeletePartInput, DeletePartOutput } from './dtos/delete-part.dto';
 import { EditBundleInput, EditBundleOutput } from './dtos/edit-bundle.dto';
 import { EditPartInput, EditPartOutput } from './dtos/edit-part.dto';
+import { PartInput, PartOutput } from './dtos/part.dto';
+import {
+  SearchBundleInput,
+  SearchBundleOutput,
+} from './dtos/search-bundle.dto';
+import { SearchPartInput, SearchPartOutput } from './dtos/search-part.dto';
 import { Bundle } from './entities/bundle.entity';
 import { Part } from './entities/part.entity';
 
@@ -43,6 +52,30 @@ export class BundleResolver {
   ): Promise<DeleteBundleOutput> {
     return this.deviceService.deleteBundle(deleteBundleInput);
   }
+
+  @Query(returns => AllBundlesOutput)
+  @Role(['CEN'])
+  async allBundles(
+    @Args('input') allBundlesInput: AllBundlesInput,
+  ): Promise<AllBundlesOutput> {
+    return this.deviceService.allBundles(allBundlesInput);
+  }
+
+  @Query(returns => BundleOutput)
+  @Role(['CEN'])
+  async findBundleById(
+    @Args('input') bundleInput: BundleInput,
+  ): Promise<BundleOutput> {
+    return this.deviceService.findBundleById(bundleInput);
+  }
+
+  @Query(returns => SearchBundleOutput)
+  @Role(['CEN'])
+  async searchBundle(
+    @Args('input') searchBundleInput: SearchBundleInput,
+  ): Promise<SearchBundleOutput> {
+    return this.deviceService.searchBundleByName(searchBundleInput);
+  }
 }
 
 @Resolver(of => Part)
@@ -71,5 +104,29 @@ export class PartResolver {
     @Args('input') deletePartInput: DeletePartInput,
   ): Promise<DeletePartOutput> {
     return this.deviceService.deletePart(deletePartInput);
+  }
+
+  @Query(returns => AllPartsOutput)
+  @Role(['CEN'])
+  async allParts(
+    @Args('input') allPartsInput: AllPartsInput,
+  ): Promise<AllPartsOutput> {
+    return this.deviceService.allParts(allPartsInput);
+  }
+
+  @Query(returns => PartOutput)
+  @Role(['CEN'])
+  async findPartById(
+    @Args('input') bundleInput: PartInput,
+  ): Promise<PartOutput> {
+    return this.deviceService.findPartById(bundleInput);
+  }
+
+  @Query(returns => SearchPartOutput)
+  @Role(['CEN'])
+  async searchPart(
+    @Args('input') searchPartInput: SearchPartInput,
+  ): Promise<SearchPartOutput> {
+    return this.deviceService.searchPartByName(searchPartInput);
   }
 }

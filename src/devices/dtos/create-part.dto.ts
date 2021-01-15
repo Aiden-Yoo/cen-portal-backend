@@ -3,7 +3,7 @@ import { CoreOutput } from 'src/common/dtos/output.dto';
 import { Part } from '../entities/part.entity';
 
 @InputType()
-export class CreatePartInput extends PickType(Part, ['name', 'serialNumber']) {
+export class CreatePartInput extends PickType(Part, ['name', 'number']) {
   @Field(type => Number)
   bundleId: number;
 }

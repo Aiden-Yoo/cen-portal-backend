@@ -81,9 +81,9 @@ export class PartnerResolver {
   @Query(returns => PartnerOutput)
   @Role(['CEN'])
   async findPartnerById(
-    @Args('input') partnerInpur: PartnerInput,
+    @Args('input') partnerInput: PartnerInput,
   ): Promise<PartnerOutput> {
-    return this.partnerService.findPartnerById(partnerInpur);
+    return this.partnerService.findPartnerById(partnerInput);
   }
 
   @Query(returns => SearchPartnerOutput)
