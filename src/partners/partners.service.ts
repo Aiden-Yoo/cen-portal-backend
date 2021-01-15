@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AllContactsOutput } from './dtos/all-contacts.dto';
-import { AllPartnersOutput } from './dtos/all-partners.dto';
+import { AllPartnersInput, AllPartnersOutput } from './dtos/all-partners.dto';
 import {
   CreateContactInput,
   CreateContactOutput,
@@ -108,12 +108,27 @@ export class PartnerService {
     }
   }
 
-  async allPartners(): Promise<AllPartnersOutput> {
+  async allPartners({
+    page,
+    take,
+  }: AllPartnersInput): Promise<AllPartnersOutput> {
     try {
-      const partners = await this.partners.find({ relations: ['contacts'] });
+      if (take !== 25 && take !== 50 && take !== 75 && take !== 100) {
+        return {
+          ok: false,
+          error: '잘못된 변수 입니다.',
+        };
+      }
+      const [partners, totalResults] = await this.partners.findAndCount({
+        skip: (page - 1) * take,
+        take,
+        relations: ['contacts'],
+      });
       return {
         ok: true,
         partners,
+        totalPages: Math.ceil(totalResults / take),
+        totalResults,
       };
     } catch (e) {
       return {

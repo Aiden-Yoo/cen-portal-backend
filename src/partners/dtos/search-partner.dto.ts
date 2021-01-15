@@ -6,10 +6,13 @@ import {
 import { Partner } from '../entities/partner.entity';
 
 @InputType()
-export class AllPartnersInput extends PaginationInput {}
+export class SearchPartnerInput extends PaginationInput {
+  @Field(type => String)
+  query: string;
+}
 
 @ObjectType()
-export class AllPartnersOutput extends PaginationOutput {
+export class SearchPartnerOutput extends PaginationOutput {
   @Field(type => [Partner], { nullable: true })
   partners?: Partner[];
 }

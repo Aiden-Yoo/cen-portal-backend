@@ -9,7 +9,7 @@ import {
 } from '@nestjs/graphql';
 import { Role } from 'src/auth/role.decorator';
 import { AllContactsOutput } from './dtos/all-contacts.dto';
-import { AllPartnersOutput } from './dtos/all-partners.dto';
+import { AllPartnersInput, AllPartnersOutput } from './dtos/all-partners.dto';
 import {
   CreateContactInput,
   CreateContactOutput,
@@ -63,8 +63,10 @@ export class PartnerResolver {
 
   @Query(returns => AllPartnersOutput)
   @Role(['CEN'])
-  async allPartners(): Promise<AllPartnersOutput> {
-    return this.partnerService.allPartners();
+  async allPartners(
+    @Args('input') allPartnersInput: AllPartnersInput,
+  ): Promise<AllPartnersOutput> {
+    return this.partnerService.allPartners(allPartnersInput);
   }
 
   @ResolveField(type => Int)
