@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Raw, Repository } from 'typeorm';
 import { AllContactsOutput } from './dtos/all-contacts.dto';
 import { AllPartnersInput, AllPartnersOutput } from './dtos/all-partners.dto';
 import {
@@ -22,6 +22,10 @@ import {
 import { EditContactInput, EditContactOutput } from './dtos/edit-contact.dto';
 import { EditPartnerInput, EditPartnerOutput } from './dtos/edit-partner.dto';
 import { PartnerInput, PartnerOutput } from './dtos/partner.dto';
+import {
+  SearchPartnerInput,
+  SearchPartnerOutput,
+} from './dtos/search-partner.dto';
 import { Contact } from './entities/contact.entity';
 import { Partner } from './entities/partner.entity';
 
@@ -161,6 +165,34 @@ export class PartnerService {
       return {
         ok: false,
         error: '파트너 정보를 찾을 수 없습니다.',
+      };
+    }
+  }
+
+  async searchPartnerByName({
+    query,
+    page,
+    take,
+  }: SearchPartnerInput): Promise<SearchPartnerOutput> {
+    try {
+      const [partners, totalResults] = await this.partners.findAndCount({
+        where: {
+          name: Raw(name => `${name} ILIKE '%${query}%'`),
+        },
+        skip: (page - 1) * take,
+        take,
+        relations: ['contacts'],
+      });
+      return {
+        ok: true,
+        partners,
+        totalResults,
+        totalPages: Math.ceil(totalResults / take),
+      };
+    } catch (e) {
+      return {
+        ok: false,
+        error: '파트너를 찾을 수 없습니다.',
       };
     }
   }

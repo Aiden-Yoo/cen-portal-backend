@@ -4,7 +4,7 @@ import { CoreOutput } from './output.dto';
 @InputType()
 export class PaginationInput {
   @Field(type => Int, { defaultValue: 1 })
-  page: number;
+  page?: number;
 
   @Field(type => Int, { defaultValue: 25 })
   take?: number;

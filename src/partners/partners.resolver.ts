@@ -29,6 +29,10 @@ import {
 import { EditContactInput, EditContactOutput } from './dtos/edit-contact.dto';
 import { EditPartnerInput, EditPartnerOutput } from './dtos/edit-partner.dto';
 import { PartnerInput, PartnerOutput } from './dtos/partner.dto';
+import {
+  SearchPartnerInput,
+  SearchPartnerOutput,
+} from './dtos/search-partner.dto';
 import { Contact } from './entities/contact.entity';
 import { Partner } from './entities/partner.entity';
 import { PartnerService } from './partners.service';
@@ -80,6 +84,14 @@ export class PartnerResolver {
     @Args('input') partnerInpur: PartnerInput,
   ): Promise<PartnerOutput> {
     return this.partnerService.findPartnerById(partnerInpur);
+  }
+
+  @Query(returns => SearchPartnerOutput)
+  @Role(['CEN'])
+  async searchPartner(
+    @Args('input') searchPartnerInput: SearchPartnerInput,
+  ): Promise<SearchPartnerOutput> {
+    return this.partnerService.searchPartnerByName(searchPartnerInput);
   }
 }
 
