@@ -7,6 +7,7 @@ export class CreatePartnerInput extends PickType(Partner, [
   'name',
   'address',
   'zip',
+  'tel',
 ]) {}
 
 @ObjectType()

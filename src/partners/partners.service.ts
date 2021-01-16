@@ -42,6 +42,7 @@ export class PartnerService {
     name,
     address,
     zip,
+    tel,
   }: CreatePartnerInput): Promise<CreatePartnerOutput> {
     try {
       const exists = await this.partners.findOne({ name });
@@ -51,7 +52,9 @@ export class PartnerService {
           error: '이미 존재합니다.',
         };
       }
-      await this.partners.save(this.partners.create({ name, address, zip }));
+      await this.partners.save(
+        this.partners.create({ name, address, zip, tel }),
+      );
       return {
         ok: true,
       };

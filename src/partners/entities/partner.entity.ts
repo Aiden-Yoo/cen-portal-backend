@@ -20,6 +20,10 @@ export class Partner extends CoreEntity {
   @Field(type => String, { nullable: true })
   zip?: string;
 
+  @Column({ nullable: true })
+  @Field(type => String, { nullable: true })
+  tel?: string;
+
   @OneToMany(
     type => Contact,
     contact => contact.partner,
