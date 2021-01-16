@@ -2,6 +2,10 @@ import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { AuthUser } from 'src/auth/auth-user.decorator';
 import { Role } from 'src/auth/role.decorator';
 import {
+  ApprovalAccountInput,
+  ApprovalAccountOutput,
+} from './dtos/approval-account.dto';
+import {
   CreateAccountInput,
   CreateAccountOutput,
 } from './dtos/create-account.dto';
@@ -56,5 +60,13 @@ export class UserResolver {
     @Args('input') { code }: VerifyEmailInput,
   ): Promise<VerifyEmailOutput> {
     return this.usersService.verifyEmail(code);
+  }
+
+  @Mutation(returns => ApprovalAccountOutput)
+  @Role(['CENSE'])
+  async approvalAccount(
+    @Args('input') approvalAccountInput: ApprovalAccountInput,
+  ): Promise<ApprovalAccountOutput> {
+    return this.usersService.approvalAccount(approvalAccountInput);
   }
 }

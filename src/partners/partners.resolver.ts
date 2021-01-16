@@ -42,7 +42,7 @@ export class PartnerResolver {
   constructor(private readonly partnerService: PartnerService) {}
 
   @Mutation(returns => CreatePartnerOutput)
-  @Role(['CEN'])
+  @Role(['CENSE', 'CEN'])
   async createPartner(
     @Args('input') createPartnerInput: CreatePartnerInput,
   ): Promise<CreatePartnerOutput> {
@@ -50,7 +50,7 @@ export class PartnerResolver {
   }
 
   @Mutation(returns => EditPartnerOutput)
-  @Role(['CEN'])
+  @Role(['CENSE', 'CEN'])
   async editPartner(
     @Args('input') editPartnerInput: EditPartnerInput,
   ): Promise<EditPartnerOutput> {
@@ -58,7 +58,7 @@ export class PartnerResolver {
   }
 
   @Mutation(returns => DeletePartnerOutput)
-  @Role(['CEN'])
+  @Role(['CENSE', 'CEN'])
   async deletePartner(
     @Args('input') deletePartnerInput: DeletePartnerInput,
   ): Promise<DeletePartnerOutput> {
@@ -66,7 +66,7 @@ export class PartnerResolver {
   }
 
   @Query(returns => AllPartnersOutput)
-  @Role(['CEN'])
+  @Role(['CENSE', 'CEN'])
   async allPartners(
     @Args('input') allPartnersInput: AllPartnersInput,
   ): Promise<AllPartnersOutput> {
@@ -79,7 +79,7 @@ export class PartnerResolver {
   }
 
   @Query(returns => PartnerOutput)
-  @Role(['CEN'])
+  @Role(['CENSE', 'CEN'])
   async findPartnerById(
     @Args('input') partnerInput: PartnerInput,
   ): Promise<PartnerOutput> {
@@ -87,7 +87,7 @@ export class PartnerResolver {
   }
 
   @Query(returns => SearchPartnerOutput)
-  @Role(['CEN'])
+  @Role(['CENSE', 'CEN'])
   async searchPartner(
     @Args('input') searchPartnerInput: SearchPartnerInput,
   ): Promise<SearchPartnerOutput> {
@@ -100,7 +100,7 @@ export class ContactResolver {
   constructor(private readonly partnerService: PartnerService) {}
 
   @Mutation(returns => CreateContactOutput)
-  @Role(['CEN'])
+  @Role(['CENSE', 'CEN'])
   async createContact(
     @Args('input') createContactInput: CreateContactInput,
   ): Promise<CreateContactOutput> {
@@ -108,7 +108,7 @@ export class ContactResolver {
   }
 
   @Mutation(returns => EditContactOutput)
-  @Role(['CEN'])
+  @Role(['CENSE', 'CEN'])
   async editContact(
     @Args('input') editContactInput: EditContactInput,
   ): Promise<EditContactOutput> {
@@ -116,7 +116,7 @@ export class ContactResolver {
   }
 
   @Mutation(returns => DeleteContactOutput)
-  @Role(['CEN'])
+  @Role(['CENSE', 'CEN'])
   async deleteContact(
     @Args('input') deleteContactInput: DeleteContactInput,
   ): Promise<DeleteContactOutput> {
@@ -124,7 +124,7 @@ export class ContactResolver {
   }
 
   @Query(returns => AllContactsOutput)
-  @Role(['CEN'])
+  @Role(['CENSE', 'CEN'])
   async allContacts(): Promise<AllContactsOutput> {
     return this.partnerService.allContacts();
   }

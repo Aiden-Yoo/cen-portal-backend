@@ -30,7 +30,7 @@ export class BundleResolver {
   constructor(private readonly deviceService: DeviceService) {}
 
   @Mutation(returns => CreateBundleOutput)
-  @Role(['CEN'])
+  @Role(['CENSE'])
   async createBundle(
     @Args('input') createBundleInput: CreateBundleInput,
   ): Promise<CreateBundleOutput> {
@@ -38,7 +38,7 @@ export class BundleResolver {
   }
 
   @Mutation(returns => EditBundleOutput)
-  @Role(['CEN'])
+  @Role(['CENSE'])
   async editBundle(
     @Args('input') editBundleInput: EditBundleInput,
   ): Promise<EditBundleOutput> {
@@ -46,7 +46,7 @@ export class BundleResolver {
   }
 
   @Mutation(returns => DeleteBundleOutput)
-  @Role(['CEN'])
+  @Role(['CENSE'])
   async deleteBundle(
     @Args('input') deleteBundleInput: DeleteBundleInput,
   ): Promise<DeleteBundleOutput> {
@@ -54,7 +54,7 @@ export class BundleResolver {
   }
 
   @Query(returns => AllBundlesOutput)
-  @Role(['CEN'])
+  @Role(['CENSE', 'CEN'])
   async allBundles(
     @Args('input') allBundlesInput: AllBundlesInput,
   ): Promise<AllBundlesOutput> {
@@ -62,7 +62,7 @@ export class BundleResolver {
   }
 
   @Query(returns => BundleOutput)
-  @Role(['CEN'])
+  @Role(['CENSE', 'CEN'])
   async findBundleById(
     @Args('input') bundleInput: BundleInput,
   ): Promise<BundleOutput> {
@@ -70,7 +70,7 @@ export class BundleResolver {
   }
 
   @Query(returns => SearchBundleOutput)
-  @Role(['CEN'])
+  @Role(['CENSE', 'CEN'])
   async searchBundle(
     @Args('input') searchBundleInput: SearchBundleInput,
   ): Promise<SearchBundleOutput> {
@@ -83,7 +83,7 @@ export class PartResolver {
   constructor(private readonly deviceService: DeviceService) {}
 
   @Mutation(returns => CreatePartOutput)
-  @Role(['CEN'])
+  @Role(['CENSE'])
   async createPart(
     @Args('input') createPartInput: CreatePartInput,
   ): Promise<CreatePartOutput> {
@@ -91,7 +91,7 @@ export class PartResolver {
   }
 
   @Mutation(returns => EditPartOutput)
-  @Role(['CEN'])
+  @Role(['CENSE'])
   async editPart(
     @Args('input') editPartInput: EditPartInput,
   ): Promise<EditPartOutput> {
@@ -99,7 +99,7 @@ export class PartResolver {
   }
 
   @Mutation(returns => DeletePartOutput)
-  @Role(['CEN'])
+  @Role(['CENSE'])
   async deletePart(
     @Args('input') deletePartInput: DeletePartInput,
   ): Promise<DeletePartOutput> {
@@ -107,7 +107,7 @@ export class PartResolver {
   }
 
   @Query(returns => AllPartsOutput)
-  @Role(['CEN'])
+  @Role(['CENSE', 'CEN'])
   async allParts(
     @Args('input') allPartsInput: AllPartsInput,
   ): Promise<AllPartsOutput> {
@@ -115,7 +115,7 @@ export class PartResolver {
   }
 
   @Query(returns => PartOutput)
-  @Role(['CEN'])
+  @Role(['CENSE', 'CEN'])
   async findPartById(
     @Args('input') bundleInput: PartInput,
   ): Promise<PartOutput> {
@@ -123,7 +123,7 @@ export class PartResolver {
   }
 
   @Query(returns => SearchPartOutput)
-  @Role(['CEN'])
+  @Role(['CENSE', 'CEN'])
   async searchPart(
     @Args('input') searchPartInput: SearchPartInput,
   ): Promise<SearchPartOutput> {

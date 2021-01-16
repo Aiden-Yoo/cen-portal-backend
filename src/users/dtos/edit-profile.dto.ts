@@ -10,7 +10,6 @@ export class EditProfileInput extends PartialType(
   PickType(User, [
     'email',
     'password',
-    'role',
     'name',
     'company',
     'team',

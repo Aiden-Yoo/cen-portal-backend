@@ -11,9 +11,10 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { IsBoolean, IsEmail, IsEnum, IsString } from 'class-validator';
 
 export enum UserRole {
+  CENSE = 'CENSE',
   CEN = 'CEN',
-  Partner1 = 'Partner1',
-  Partner2 = 'Partner2',
+  Distributor = 'Distributor',
+  Partner = 'Partner',
   Client = 'Client',
 }
 
@@ -68,7 +69,7 @@ export class User extends CoreEntity {
   @IsBoolean()
   verified: boolean;
 
-  @Column({ default: false })
+  @Column({ default: true })
   @Field(type => Boolean)
   @IsBoolean()
   isLocked: boolean;

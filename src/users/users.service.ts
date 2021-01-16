@@ -13,6 +13,10 @@ import { Verification } from './entities/verification.entity';
 import { VerifyEmailOutput } from './dtos/verify-email.dto';
 import { UserProfileOutput } from './dtos/user-profile.dto';
 import { MailService } from 'src/mail/mail.service';
+import {
+  ApprovalAccountInput,
+  ApprovalAccountOutput,
+} from './dtos/approval-account.dto';
 
 @Injectable()
 export class UserService {
@@ -144,7 +148,7 @@ export class UserService {
         user.name = name;
       }
       if (company) {
-        if (role === 'CEN') {
+        if (role === 'CEN' || 'CENSE') {
           company = 'CoreEdge Networks';
         }
         user.company = company;
@@ -182,6 +186,34 @@ export class UserService {
       return { ok: false, error: '메일 인증이 필요합니다.' };
     } catch (error) {
       return { ok: false, error: '메일을 인증하지 못했습니다.' };
+    }
+  }
+
+  async approvalAccount(
+    approvalAccountInput: ApprovalAccountInput,
+  ): Promise<ApprovalAccountOutput> {
+    try {
+      const user = await this.users.findOne(approvalAccountInput.userId);
+      if (!user) {
+        return {
+          ok: false,
+          error: '사용자를 찾을 수 없습니다.',
+        };
+      }
+      console.log(approvalAccountInput);
+      await this.users.save({
+        id: approvalAccountInput.userId,
+        ...approvalAccountInput,
+      });
+      return {
+        ok: true,
+      };
+    } catch (e) {
+      console.log(e);
+      return {
+        ok: false,
+        error: '계정을 수정할 수 없습니다.',
+      };
     }
   }
 }
