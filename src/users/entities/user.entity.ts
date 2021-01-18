@@ -5,10 +5,11 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { InternalServerErrorException } from '@nestjs/common';
 import { IsBoolean, IsEmail, IsEnum, IsString } from 'class-validator';
+import { Order } from 'src/orders/entities/order.entity';
 
 export enum UserRole {
   CENSE = 'CENSE',
@@ -73,6 +74,13 @@ export class User extends CoreEntity {
   @Field(type => Boolean)
   @IsBoolean()
   isLocked: boolean;
+
+  @OneToMany(
+    type => Order,
+    order => order.writer,
+  )
+  @Field(type => [Order])
+  orders: Order[];
 
   @BeforeInsert()
   @BeforeUpdate()

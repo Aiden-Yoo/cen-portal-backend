@@ -1,7 +1,8 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { OrderItem } from 'src/orders/entities/order-item.entity';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { Part } from './part.entity';
 
 @InputType('BundleInputType', { isAbstract: true })
@@ -20,4 +21,12 @@ export class Bundle extends CoreEntity {
   )
   @Field(type => [Part], { nullable: true })
   parts?: Part[];
+
+  @ManyToOne(
+    type => OrderItem,
+    orderItem => orderItem.bundle,
+    { onDelete: 'CASCADE' },
+  )
+  @Field(type => OrderItem)
+  orderItem: OrderItem;
 }

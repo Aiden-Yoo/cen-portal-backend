@@ -15,6 +15,10 @@ import { Contact } from './partners/entities/contact.entity';
 import { DevicesModule } from './devices/devices.module';
 import { Bundle } from './devices/entities/bundle.entity';
 import { Part } from './devices/entities/part.entity';
+import { OrdersModule } from './orders/orders.module';
+import { Order } from './orders/entities/order.entity';
+import { ItemInfo } from './orders/entities/item-info.entity';
+import { OrderItem } from './orders/entities/order-item.entity';
 
 @Module({
   imports: [
@@ -47,7 +51,17 @@ import { Part } from './devices/entities/part.entity';
       synchronize: process.env.NOTE_ENV !== 'prod',
       logging:
         process.env.NOTE_ENV !== 'prod' && process.env.NOTE_ENV !== 'test',
-      entities: [User, Verification, Partner, Contact, Bundle, Part],
+      entities: [
+        User,
+        Verification,
+        Partner,
+        Contact,
+        Bundle,
+        Part,
+        Order,
+        OrderItem,
+        ItemInfo,
+      ],
     }),
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
@@ -71,6 +85,7 @@ import { Part } from './devices/entities/part.entity';
     UsersModule,
     PartnersModule,
     DevicesModule,
+    OrdersModule,
   ],
   controllers: [],
   providers: [],

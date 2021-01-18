@@ -1,5 +1,5 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { IsNumber, IsString } from 'class-validator';
+import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
+import { IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { Column, Entity, ManyToOne, RelationId } from 'typeorm';
 import { Bundle } from './bundle.entity';
@@ -13,18 +13,21 @@ export class Part extends CoreEntity {
   @IsString()
   name: string;
 
-  @Column()
-  @Field(type => Number)
-  @IsNumber()
-  number: number;
+  @Column({ nullable: true, default: 1 })
+  @Field(type => Int, { nullable: true })
+  num?: number;
+
+  @Column({ nullable: true })
+  @Field(type => String, { nullable: true })
+  description?: string;
 
   @ManyToOne(
     type => Bundle,
     bundle => bundle.parts,
-    { onDelete: 'CASCADE' },
+    { nullable: true, onDelete: 'CASCADE' },
   )
-  @Field(type => Bundle)
-  bundle: Bundle;
+  @Field(type => Bundle, { nullable: true })
+  bundle?: Bundle;
 
   @RelationId((part: Part) => part.bundle)
   bundleId: number;

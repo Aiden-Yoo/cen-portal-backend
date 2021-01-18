@@ -187,6 +187,7 @@ export class DeviceService {
   ): Promise<CreatePartOutput> {
     try {
       const bundle = await this.bundles.findOne(createPartInput.bundleId);
+      console.log(bundle);
       if (!bundle) {
         return {
           ok: false,
@@ -211,13 +212,15 @@ export class DeviceService {
       if (!part) {
         return {
           ok: false,
-          error: '부품을 찾지 못했습니다.',
+          error: '부품을 찾을 수 없습니다.',
         };
       }
-      await this.parts.save({
-        id: editPartInput.partId,
-        ...editPartInput,
-      });
+      await this.parts.save([
+        {
+          id: editPartInput.partId,
+          ...editPartInput,
+        },
+      ]);
       return {
         ok: true,
       };
