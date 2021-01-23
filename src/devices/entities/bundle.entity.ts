@@ -14,6 +14,11 @@ export class Bundle extends CoreEntity {
   @IsString()
   name: string;
 
+  @Column({ nullable: true })
+  @Field(type => String, { nullable: true })
+  @IsString()
+  series: string;
+
   @OneToMany(
     type => Part,
     part => part.bundle,

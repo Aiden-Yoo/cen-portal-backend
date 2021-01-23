@@ -52,17 +52,14 @@ export class User extends CoreEntity {
 
   @Column({ nullable: true })
   @Field(type => String, { nullable: true })
-  @IsString()
   team?: string;
 
   @Column({ nullable: true })
   @Field(type => String, { nullable: true })
-  @IsString()
   jobTitle?: string;
 
   @Column({ nullable: true })
   @Field(type => String, { nullable: true })
-  @IsString()
   bio?: string;
 
   @Column({ default: false })
