@@ -120,7 +120,7 @@ export class PartnerService {
     take,
   }: AllPartnersInput): Promise<AllPartnersOutput> {
     try {
-      if (take !== 25 && take !== 50 && take !== 75 && take !== 100) {
+      if (take !== 10 && take !== 20 && take !== 50 && take !== 100) {
         return {
           ok: false,
           error: '잘못된 변수 입니다.',

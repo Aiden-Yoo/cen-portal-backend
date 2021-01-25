@@ -3,7 +3,11 @@ import { CoreOutput } from 'src/common/dtos/output.dto';
 import { Bundle } from '../entities/bundle.entity';
 
 @InputType()
-export class CreateBundleInput extends PickType(Bundle, ['name']) {}
+export class CreateBundleInput extends PickType(Bundle, [
+  'name',
+  'series',
+  'parts',
+]) {}
 
 @ObjectType()
 export class CreateBundleOutput extends CoreOutput {}

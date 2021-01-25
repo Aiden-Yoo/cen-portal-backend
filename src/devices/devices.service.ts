@@ -34,7 +34,11 @@ export class DeviceService {
     private readonly parts: Repository<Part>,
   ) {}
 
-  async createBundle({ name }: CreateBundleInput): Promise<CreateBundleOutput> {
+  async createBundle({
+    name,
+    series,
+    parts,
+  }: CreateBundleInput): Promise<CreateBundleOutput> {
     try {
       const exists = await this.bundles.findOne({ name });
       if (exists) {
@@ -43,7 +47,14 @@ export class DeviceService {
           error: '이미 존재합니다.',
         };
       }
-      await this.bundles.save(this.bundles.create({ name }));
+      const bundle = await this.bundles.save(
+        this.bundles.create({ name, series, parts }),
+      );
+      for (const part of parts) {
+        await this.parts.save(
+          this.parts.create({ bundle, name: part.name, num: part.num }),
+        );
+      }
       return {
         ok: true,
       };
@@ -106,7 +117,7 @@ export class DeviceService {
 
   async allBundles({ page, take }: AllBundlesInput): Promise<AllBundlesOutput> {
     try {
-      if (take !== 25 && take !== 50 && take !== 75 && take !== 100) {
+      if (take !== 10 && take !== 20 && take !== 50 && take !== 100) {
         return {
           ok: false,
           error: '잘못된 변수 입니다.',

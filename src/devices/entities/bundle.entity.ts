@@ -30,8 +30,8 @@ export class Bundle extends CoreEntity {
   @ManyToOne(
     type => OrderItem,
     orderItem => orderItem.bundle,
-    { onDelete: 'CASCADE' },
+    { onDelete: 'CASCADE', nullable: true },
   )
-  @Field(type => OrderItem)
+  @Field(type => OrderItem, { nullable: true })
   orderItem: OrderItem;
 }
