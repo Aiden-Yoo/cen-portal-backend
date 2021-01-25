@@ -174,6 +174,6 @@ export class Order extends CoreEntity {
 
   @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.Created })
   @Field(type => OrderStatus)
-  @IsEnum(OrderStatus)
-  status: OrderStatus;
+  // @IsEnum(OrderStatus)
+  status?: OrderStatus;
 }

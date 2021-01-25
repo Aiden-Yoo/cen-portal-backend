@@ -83,11 +83,7 @@ export class OrderService {
         console.log(parts);
         for (const partlist of parts) {
           // console.log(partlist.name + ': ' + partlist.num + 'x' + orderItem.num);
-          for (
-            let count: number = 0;
-            count < partlist.num * orderItem.num;
-            count++
-          ) {
+          for (let count = 0; count < partlist.num * orderItem.num; count++) {
             await this.itemInfos.save(
               this.itemInfos.create({
                 name: partlist.name,
@@ -250,10 +246,12 @@ export class OrderService {
             writer: user,
             ...(status && { status }),
           },
-          relations: ['itemInfos'],
+          relations: ['itemInfos', 'partner'],
         });
       } else if (user.role === UserRole.CENSE) {
-        orders = await this.orders.find({ relations: ['itemInfos'] });
+        orders = await this.orders.find({
+          relations: ['itemInfos', 'partner'],
+        });
       }
       return {
         ok: true,
