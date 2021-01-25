@@ -93,7 +93,7 @@ export class Order extends CoreEntity {
   @IsEnum(OrderClassification)
   classification: OrderClassification;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamp without time zone', nullable: true })
   @Field(type => Date, { nullable: true })
   demoReturnDate?: Date;
 
@@ -133,7 +133,7 @@ export class Order extends CoreEntity {
   @IsString()
   address: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'timestamp without time zone' })
   @Field(type => Date)
   @IsDate()
   deliveryDate: Date;
