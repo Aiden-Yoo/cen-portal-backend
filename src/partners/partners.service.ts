@@ -120,12 +120,6 @@ export class PartnerService {
     take,
   }: AllPartnersInput): Promise<AllPartnersOutput> {
     try {
-      if (take !== 10 && take !== 20 && take !== 50 && take !== 100) {
-        return {
-          ok: false,
-          error: '잘못된 변수 입니다.',
-        };
-      }
       const [partners, totalResults] = await this.partners.findAndCount({
         skip: (page - 1) * take,
         take,

@@ -250,6 +250,9 @@ export class OrderService {
         });
       } else if (user.role === UserRole.CENSE) {
         orders = await this.orders.find({
+          where: {
+            ...(status && { status }),
+          },
           relations: ['itemInfos', 'partner'],
         });
       }
@@ -271,7 +274,7 @@ export class OrderService {
   ): Promise<GetOrderOutput> {
     try {
       const order = await this.orders.findOne(orderId, {
-        relations: ['writer', 'partner', 'items', 'itemInfos'],
+        relations: ['writer', 'partner', 'items', 'items.bundle', 'itemInfos'],
       });
       if (!order) {
         return {
