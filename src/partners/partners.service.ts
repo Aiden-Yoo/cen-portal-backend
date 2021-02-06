@@ -123,13 +123,14 @@ export class PartnerService {
       const [partners, totalResults] = await this.partners.findAndCount({
         skip: (page - 1) * take,
         take,
-        relations: ['contacts'],
+        relations: ['contacts', 'orders'],
+        order: {createAt:"DESC"}
       });
       return {
         ok: true,
-        partners,
         totalPages: Math.ceil(totalResults / take),
         totalResults,
+        partners,
       };
     } catch (e) {
       return {
