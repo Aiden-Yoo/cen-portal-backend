@@ -147,7 +147,7 @@ export class PartnerService {
   async findPartnerById({ partnerId }: PartnerInput): Promise<PartnerOutput> {
     try {
       const partner = await this.partners.findOne(partnerId, {
-        relations: ['contacts'],
+        relations: ['contacts', 'orders', 'orders.items', 'orders.items.bundle'],
       });
       if (!partner) {
         return {

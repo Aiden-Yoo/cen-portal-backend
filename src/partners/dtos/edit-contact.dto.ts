@@ -13,6 +13,7 @@ export class EditContactInput extends PickType(PartialType(Contact), [
   'name',
   'tel',
   'jobTitle',
+  'team',
 ]) {
   @Field(type => Number)
   contactId: number;
