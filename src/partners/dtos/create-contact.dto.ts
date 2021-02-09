@@ -7,6 +7,7 @@ export class CreateContactInput extends PickType(Contact, [
   'name',
   'jobTitle',
   'tel',
+  'team',
 ]) {
   @Field(type => Number)
   partnerId: number;
