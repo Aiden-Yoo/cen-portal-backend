@@ -73,20 +73,22 @@ export class OrderService {
         }),
       );
       console.log(orderItems);
-      ///////////////////for itme-info
+      // for itme-info
       for (const orderItem of orderItems) {
         // orderItem.num // number of bundle
         // orderItem.bundle.id // bundle id
         const { parts } = await this.bundles.findOne(orderItem.bundle.id, {
-          relations: ['parts'],
+          relations: ['parts', 'parts.part'],
         });
-        console.log(parts);
         for (const partlist of parts) {
-          // console.log(partlist.name + ': ' + partlist.num + 'x' + orderItem.num);
+          // console.log(partlist);
+          // console.log(
+          //   partlist.part.name + ': ' + partlist.num + 'x' + orderItem.num,
+          // );
           for (let count = 0; count < partlist.num * orderItem.num; count++) {
             await this.itemInfos.save(
               this.itemInfos.create({
-                // name: partlist.name,
+                name: partlist.part.name,
                 order,
               }),
             );
