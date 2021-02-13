@@ -3,7 +3,7 @@ import { IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { OrderItem } from 'src/orders/entities/order-item.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
-import { Part } from './part.entity';
+import { BundleItem } from './bundle-item.entity';
 
 @InputType('BundleInputType', { isAbstract: true })
 @ObjectType()
@@ -20,12 +20,16 @@ export class Bundle extends CoreEntity {
   series: string;
 
   @OneToMany(
-    type => Part,
-    part => part.bundle,
+    type => BundleItem,
+    bundleItem => bundleItem.bundle,
     { nullable: true },
   )
-  @Field(type => [Part], { nullable: true })
-  parts?: Part[];
+  @Field(type => [BundleItem], { nullable: true })
+  parts?: BundleItem[];
+
+  @Column({ nullable: true })
+  @Field(type => String, { nullable: true })
+  description?: string;
 
   @ManyToOne(
     type => OrderItem,

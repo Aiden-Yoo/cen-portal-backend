@@ -22,6 +22,7 @@ import {
   SearchBundleOutput,
 } from './dtos/search-bundle.dto';
 import { SearchPartInput, SearchPartOutput } from './dtos/search-part.dto';
+import { BundleItem } from './entities/bundle-item.entity';
 import { Bundle } from './entities/bundle.entity';
 import { Part } from './entities/part.entity';
 
@@ -30,31 +31,42 @@ export class DeviceService {
   constructor(
     @InjectRepository(Bundle)
     private readonly bundles: Repository<Bundle>,
+    @InjectRepository(BundleItem)
+    private readonly bundleItems: Repository<BundleItem>,
     @InjectRepository(Part)
     private readonly parts: Repository<Part>,
   ) {}
 
-  async createBundle({
-    name,
-    series,
-    parts,
-  }: CreateBundleInput): Promise<CreateBundleOutput> {
+  async createBundle(
+    createBundleInput: CreateBundleInput,
+  ): Promise<CreateBundleOutput> {
     try {
-      const exists = await this.bundles.findOne({ name });
-      if (exists) {
-        return {
-          ok: false,
-          error: '이미 존재합니다.',
-        };
-      }
-      const bundle = await this.bundles.save(
-        this.bundles.create({ name, series, parts }),
-      );
-      for (const part of parts) {
-        await this.parts.save(
-          this.parts.create({ bundle, name: part.name, num: part.num }),
+      const bundleItems: BundleItem[] = [];
+      for (const onePart of createBundleInput.parts) {
+        const part = await this.parts.findOne(onePart.partId);
+        if (!part) {
+          return {
+            ok: false,
+            error: '부품을 찾을 수 없습니다.',
+          };
+        }
+        // for bundle-item
+        const bundleItem = await this.bundleItems.save(
+          this.bundleItems.create({
+            part,
+            num: onePart.num,
+          }),
         );
+        bundleItems.push(bundleItem);
       }
+      // for bundle
+      await this.bundles.save(
+        this.bundles.create({
+          ...createBundleInput,
+          parts: bundleItems,
+        }),
+      );
+
       return {
         ok: true,
       };
@@ -120,7 +132,7 @@ export class DeviceService {
       const [bundles, totalResults] = await this.bundles.findAndCount({
         skip: (page - 1) * take,
         take,
-        relations: ['parts'],
+        relations: ['parts', 'parts.part'],
       });
       return {
         ok: true,
@@ -139,7 +151,7 @@ export class DeviceService {
   async findBundleById({ bundleId }: BundleInput): Promise<BundleOutput> {
     try {
       const bundle = await this.bundles.findOne(bundleId, {
-        relations: ['parts'],
+        relations: ['parts', 'parts.part'],
       });
       if (!bundle) {
         return {
@@ -171,7 +183,7 @@ export class DeviceService {
         },
         skip: (page - 1) * take,
         take,
-        relations: ['parts'],
+        relations: ['parts', 'parts.part'],
       });
       return {
         ok: true,
@@ -187,19 +199,20 @@ export class DeviceService {
     }
   }
 
-  async createPart(
-    createPartInput: CreatePartInput,
-  ): Promise<CreatePartOutput> {
+  async createPart({
+    name,
+    series,
+    description,
+  }: CreatePartInput): Promise<CreatePartOutput> {
     try {
-      const bundle = await this.bundles.findOne(createPartInput.bundleId);
-      console.log(bundle);
-      if (!bundle) {
+      const exists = await this.parts.findOne({ name });
+      if (exists) {
         return {
           ok: false,
-          error: '번들을 찾을 수 없습니다.',
+          error: '이미 존재합니다.',
         };
       }
-      await this.parts.save(this.parts.create({ ...createPartInput, bundle }));
+      await this.parts.save(this.parts.create({ name, series, description }));
       return {
         ok: true,
       };
@@ -263,7 +276,6 @@ export class DeviceService {
       const [parts, totalResults] = await this.parts.findAndCount({
         skip: (page - 1) * take,
         take,
-        relations: ['bundle'],
       });
       return {
         ok: true,
@@ -281,7 +293,7 @@ export class DeviceService {
 
   async findPartById({ partId }: PartInput): Promise<PartOutput> {
     try {
-      const part = await this.parts.findOne(partId, { relations: ['bundle'] });
+      const part = await this.parts.findOne(partId);
       if (!part) {
         return {
           ok: false,
@@ -312,7 +324,6 @@ export class DeviceService {
         },
         skip: (page - 1) * take,
         take,
-        relations: ['bundle'],
       });
       return {
         ok: true,

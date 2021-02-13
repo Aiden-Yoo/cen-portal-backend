@@ -9,9 +9,6 @@ class CreateOrderItemInput {
 
   @Field(type => Int)
   num: number;
-
-  // @Field(type => [OrderItemOption], { nullable: true })
-  // options?: OrderItemOption[];
 }
 
 @InputType()
@@ -40,12 +37,3 @@ export class CreateOrderInput extends PickType(Order, [
 
 @ObjectType()
 export class CreateOrderOutput extends CoreOutput {}
-
-// @InputType()
-// class CreateOrderItemInput {
-//   @Field(type => Int)
-//   dishId: number;
-
-//   @Field(type => [OrderItemOption], { nullable: true })
-//   options?: OrderItemOption[];
-// }

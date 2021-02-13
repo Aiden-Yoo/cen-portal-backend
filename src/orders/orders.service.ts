@@ -86,7 +86,7 @@ export class OrderService {
           for (let count = 0; count < partlist.num * orderItem.num; count++) {
             await this.itemInfos.save(
               this.itemInfos.create({
-                name: partlist.name,
+                // name: partlist.name,
                 order,
               }),
             );

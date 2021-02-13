@@ -19,6 +19,7 @@ import { OrdersModule } from './orders/orders.module';
 import { Order } from './orders/entities/order.entity';
 import { ItemInfo } from './orders/entities/item-info.entity';
 import { OrderItem } from './orders/entities/order-item.entity';
+import { BundleItem } from './devices/entities/bundle-item.entity';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { OrderItem } from './orders/entities/order-item.entity';
         Contact,
         Bundle,
         Part,
+        BundleItem,
         Order,
         OrderItem,
         ItemInfo,
