@@ -44,6 +44,14 @@ export class OrderService {
           error: '파트너를 찾을 수 없습니다.',
         };
       }
+      let order = await this.orders.save(
+        this.orders.create({
+          ...createOrderInput,
+          writer,
+          partner,
+          items: null,
+        }),
+      );
       const orderItems: OrderItem[] = [];
       const itemInfo: ItemInfo[] = [];
       for (const item of createOrderInput.items) {
@@ -54,25 +62,22 @@ export class OrderService {
             error: '번들을 찾을 수 없습니다.',
           };
         }
-        // // for order-item
+        // for order-item
         const orderItem = await this.orderItems.save(
           this.orderItems.create({
             bundle,
             num: item.num,
+            order,
           }),
         );
         orderItems.push(orderItem);
       }
       // for order
-      const order = await this.orders.save(
-        this.orders.create({
-          ...createOrderInput,
-          writer,
-          partner,
-          items: orderItems,
-        }),
-      );
-      console.log(orderItems);
+      const findOrder = await this.orders.findOne(order.id);
+      order = await this.orders.save({
+        ...findOrder,
+        items: orderItems,
+      });
       // for itme-info
       for (const orderItem of orderItems) {
         // orderItem.num // number of bundle
