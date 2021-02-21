@@ -10,18 +10,25 @@ import { Order } from './order.entity';
 @Entity()
 export class OrderItem extends CoreEntity {
   @ManyToOne(type => Bundle, { nullable: true, onDelete: 'SET NULL' })
-  @Field(type => Bundle)
+  @Field(type => Bundle, { nullable: true })
   bundle: Bundle;
+
+  @RelationId((orderItem: OrderItem) => orderItem.bundle)
+  bundleId: number;
 
   @Column()
   @Field(type => Int)
   @IsNumber()
   num: number;
 
-  @ManyToOne(type => Order, { onDelete: 'CASCADE' })
+  @ManyToOne(
+    type => Order,
+    order => order.items,
+    { onDelete: 'CASCADE' },
+  )
   @Field(type => Order)
   order: Order;
 
-  // @RelationId((order: Order) => order.items)
-  // orderId: number;
+  @RelationId((orderItem: OrderItem) => orderItem.order)
+  orderId: number;
 }

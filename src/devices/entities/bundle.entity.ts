@@ -2,7 +2,7 @@ import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { OrderItem } from 'src/orders/entities/order-item.entity';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, RelationId } from 'typeorm';
 import { BundleItem } from './bundle-item.entity';
 
 @InputType('BundleInputType', { isAbstract: true })
@@ -38,4 +38,7 @@ export class Bundle extends CoreEntity {
   )
   @Field(type => OrderItem, { nullable: true })
   orderItem: OrderItem;
+
+  @RelationId((bundle: Bundle) => bundle.orderItem)
+  orderItemId: number;
 }

@@ -124,7 +124,7 @@ export class PartnerService {
         skip: (page - 1) * take,
         take,
         relations: ['contacts', 'orders'],
-        order: {createAt:"DESC"}
+        order: { createAt: 'DESC' },
       });
       return {
         ok: true,
@@ -147,7 +147,7 @@ export class PartnerService {
   async findPartnerById({ partnerId }: PartnerInput): Promise<PartnerOutput> {
     try {
       const partner = await this.partners.findOne(partnerId, {
-        relations: ['contacts', 'orders', 'orders.items', 'orders.items.bundle'],
+        relations: ['contacts', 'orders', 'orders.items'],
       });
       if (!partner) {
         return {

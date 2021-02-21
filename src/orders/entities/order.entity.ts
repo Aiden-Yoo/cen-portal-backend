@@ -172,6 +172,9 @@ export class Order extends CoreEntity {
   @JoinTable()
   items: OrderItem[];
 
+  @RelationId((order: Order) => order.items)
+  itemsId: number;
+
   @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.Created })
   @Field(type => OrderStatus)
   // @IsEnum(OrderStatus)

@@ -1,6 +1,6 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, RelationId } from 'typeorm';
 import { Partner } from './partner.entity';
 
 @InputType('ContactInputType', { isAbstract: true })
@@ -31,6 +31,6 @@ export class Contact extends CoreEntity {
   @Field(type => Partner)
   partner: Partner;
 
-  // @RelationId((contact: Contact) => contact.partner)
-  // partnerId: number;
+  @RelationId((contact: Contact) => contact.partner)
+  partnerId: number;
 }

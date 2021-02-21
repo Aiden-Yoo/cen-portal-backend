@@ -8,12 +8,12 @@ import { Part } from './part.entity';
 @ObjectType()
 @Entity()
 export class BundleItem extends CoreEntity {
-  @ManyToOne(
-    type => Part,
-    { onDelete: 'NO ACTION' },
-  )
+  @ManyToOne(type => Part, { onDelete: 'NO ACTION' })
   @Field(type => Part)
   part: Part;
+
+  @RelationId((bundleItem: BundleItem) => bundleItem.part)
+  partId: number;
 
   @Column({ nullable: true, default: 1 })
   @Field(type => Int, { nullable: true })
@@ -26,4 +26,7 @@ export class BundleItem extends CoreEntity {
   )
   @Field(type => Bundle, { nullable: true })
   bundle?: Bundle;
+
+  @RelationId((bundleItem: BundleItem) => bundleItem.bundle)
+  bundleId: number;
 }

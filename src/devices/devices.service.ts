@@ -91,8 +91,49 @@ export class DeviceService {
       }
       await this.bundles.save({
         id: editBundleInput.bundleId,
-        ...editBundleInput,
+        name: editBundleInput.name,
+        series: editBundleInput.series,
+        description: editBundleInput.description,
       });
+      // for Bundle Item
+      const bundleItemList = await this.bundleItems.find({ bundle });
+      let tempBundleItem = [];
+
+      bundleItemList.map(async bundleItem => {
+        tempBundleItem.push(bundleItem.partId);
+        editBundleInput.parts.map(async part => {
+          if (part.partId === bundleItem.partId) {
+            // console.log(part.partId);
+            await this.bundleItems.save({
+              id: bundleItem.id,
+              num: part.num,
+            });
+          }
+        });
+      });
+
+      let tempBundleInput = [];
+      editBundleInput.parts.map(async onePart => {
+        tempBundleInput.push(onePart.partId);
+        if (tempBundleItem.indexOf(onePart.partId) === -1) {
+          const part = await this.parts.findOne(onePart.partId);
+          await this.bundleItems.save(
+            this.bundleItems.create({
+              bundle,
+              part,
+              num: onePart.num,
+            }),
+          );
+        }
+      });
+
+      bundleItemList.map(async oneBundle => {
+        if (tempBundleInput.indexOf(oneBundle.partId) === -1) {
+          const part = await this.parts.findOne(oneBundle.partId);
+          await this.bundleItems.delete({ part });
+        }
+      });
+
       return {
         ok: true,
       };
@@ -233,12 +274,10 @@ export class DeviceService {
           error: '부품을 찾을 수 없습니다.',
         };
       }
-      await this.parts.save([
-        {
-          id: editPartInput.partId,
-          ...editPartInput,
-        },
-      ]);
+      await this.parts.save({
+        id: editPartInput.partId,
+        ...editPartInput,
+      });
       return {
         ok: true,
       };

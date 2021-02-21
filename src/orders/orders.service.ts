@@ -281,7 +281,15 @@ export class OrderService {
   ): Promise<GetOrderOutput> {
     try {
       const order = await this.orders.findOne(orderId, {
-        relations: ['writer', 'partner', 'items', 'items.bundle', 'itemInfos'],
+        relations: [
+          'writer',
+          'partner',
+          'items',
+          'items.bundle',
+          // 'items.bundle.name',
+          // 'orderItems',
+          // 'itemInfos',/////////
+        ],
       });
       if (!order) {
         return {
@@ -299,7 +307,8 @@ export class OrderService {
         ok: true,
         order,
       };
-    } catch {
+    } catch (e) {
+      console.log(e);
       return {
         ok: false,
         error: '출고요청서를 불러올 수 없습니다.',

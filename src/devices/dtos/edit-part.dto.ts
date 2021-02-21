@@ -11,6 +11,7 @@ import { Part } from '../entities/part.entity';
 @InputType()
 export class EditPartInput extends PickType(PartialType(Part), [
   'name',
+  'series',
   'description',
 ]) {
   @Field(type => Number)
