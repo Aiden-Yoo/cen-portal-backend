@@ -8,6 +8,10 @@ import { EditItemInfoInput, EditItemInfoOutput } from './dtos/edit-item.dto';
 import { EditOPrderOutput, EditOrderInput } from './dtos/edit-order.dto';
 import { GetOrderInput, GetOrderOutput } from './dtos/get-order.dto';
 import { GetOrdersInput, GetOrdersOutput } from './dtos/get-orders.dto';
+import {
+  GetOrderItemsInput,
+  GetOrderItemsOutput,
+} from './dtos/get-orderItems.dto';
 import { Order } from './entities/order.entity';
 import { OrderService } from './orders.service';
 
@@ -70,5 +74,14 @@ export class OrderResolver {
     @Args('input') getOrderInput: GetOrderInput,
   ): Promise<GetOrderOutput> {
     return this.ordersService.getOrder(user, getOrderInput);
+  }
+
+  @Query(returns => GetOrderItemsOutput)
+  @Role(['CENSE', 'CEN'])
+  async getOrderItems(
+    @AuthUser() user: User,
+    @Args('input') getOrderItemsInput: GetOrderItemsInput,
+  ): Promise<GetOrderItemsOutput> {
+    return this.ordersService.getOrderItems(user, getOrderItemsInput);
   }
 }

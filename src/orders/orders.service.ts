@@ -4,12 +4,16 @@ import { Bundle } from 'src/devices/entities/bundle.entity';
 import { Part } from 'src/devices/entities/part.entity';
 import { Partner } from 'src/partners/entities/partner.entity';
 import { User, UserRole } from 'src/users/entities/user.entity';
-import { Repository } from 'typeorm';
+import { Repository, Raw } from 'typeorm';
 import { CreateOrderInput, CreateOrderOutput } from './dtos/create-order.dto';
 import { DeleteOrderInput, DeleteOrderOutput } from './dtos/delete-order.dto';
 import { EditItemInfoInput, EditItemInfoOutput } from './dtos/edit-item.dto';
 import { EditOPrderOutput, EditOrderInput } from './dtos/edit-order.dto';
 import { GetOrderInput, GetOrderOutput } from './dtos/get-order.dto';
+import {
+  GetOrderItemsInput,
+  GetOrderItemsOutput,
+} from './dtos/get-orderItems.dto';
 import { GetOrdersInput, GetOrdersOutput } from './dtos/get-orders.dto';
 import { ItemInfo } from './entities/item-info.entity';
 import { OrderItem } from './entities/order-item.entity';
@@ -281,15 +285,7 @@ export class OrderService {
   ): Promise<GetOrderOutput> {
     try {
       const order = await this.orders.findOne(orderId, {
-        relations: [
-          'writer',
-          'partner',
-          'items',
-          'items.bundle',
-          // 'items.bundle.name',
-          // 'orderItems',
-          // 'itemInfos',/////////
-        ],
+        relations: ['writer', 'partner', 'items', 'items.bundle'],
       });
       if (!order) {
         return {
@@ -312,6 +308,41 @@ export class OrderService {
       return {
         ok: false,
         error: '출고요청서를 불러올 수 없습니다.',
+      };
+    }
+  }
+
+  async getOrderItems(
+    user: User,
+    { orderId, page, take }: GetOrderItemsInput,
+  ): Promise<GetOrderItemsOutput> {
+    try {
+      if (user.role === UserRole.CENSE || user.role === UserRole.CEN) {
+        const [itemInfos, totalResults] = await this.itemInfos.findAndCount({
+          where: {
+            order: orderId,
+          },
+          skip: (page - 1) * take,
+          take,
+        });
+        if (!itemInfos || itemInfos.length === 0) {
+          return {
+            ok: false,
+            error: '제품 정보가 존재하지 않습니다.',
+          };
+        }
+        return {
+          ok: true,
+          itemInfos,
+          totalPages: Math.ceil(totalResults / take),
+          totalResults,
+        };
+      }
+    } catch (e) {
+      console.log(e);
+      return {
+        ok: false,
+        error: '제품 정보를 불러올 수 없습니다.',
       };
     }
   }
