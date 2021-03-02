@@ -324,6 +324,7 @@ export class OrderService {
           },
           skip: (page - 1) * take,
           take,
+          order: { id: 'ASC' },
         });
         if (!itemInfos || itemInfos.length === 0) {
           return {
