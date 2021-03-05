@@ -20,6 +20,8 @@ import { Order } from './orders/entities/order.entity';
 import { ItemInfo } from './orders/entities/item-info.entity';
 import { OrderItem } from './orders/entities/order-item.entity';
 import { BundleItem } from './devices/entities/bundle-item.entity';
+import { PostsModule } from './posts/posts.module';
+import { HomeNotice } from './posts/entities/home-notice.entity';
 
 @Module({
   imports: [
@@ -63,6 +65,7 @@ import { BundleItem } from './devices/entities/bundle-item.entity';
         Order,
         OrderItem,
         ItemInfo,
+        HomeNotice,
       ],
     }),
     GraphQLModule.forRoot({
@@ -88,6 +91,7 @@ import { BundleItem } from './devices/entities/bundle-item.entity';
     PartnersModule,
     DevicesModule,
     OrdersModule,
+    PostsModule,
   ],
   controllers: [],
   providers: [],
