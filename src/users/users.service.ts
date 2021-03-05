@@ -132,21 +132,21 @@ export class UserService {
   ): Promise<EditProfileOutput> {
     try {
       const user = await this.users.findOne(userId);
-      if (email) {
-        user.email = email;
-        user.verified = false;
-        await this.verifications.delete({ user: { id: user.id } });
-        const verification = await this.verifications.save(
-          this.verifications.create({ user }),
-        );
-        this.mailService.sendVerificationEmail(user.email, verification.code);
-      }
+      // if (email) {
+      //   user.email = email;
+      //   user.verified = false;
+      //   await this.verifications.delete({ user: { id: user.id } });
+      //   const verification = await this.verifications.save(
+      //     this.verifications.create({ user }),
+      //   );
+      //   this.mailService.sendVerificationEmail(user.email, verification.code);
+      // }
       if (password) {
         user.password = password;
       }
-      if (name) {
-        user.name = name;
-      }
+      // if (name) {
+      //   user.name = name;
+      // }
       if (company) {
         if (role === 'CEN' || 'CENSE') {
           company = 'CoreEdge Networks';
