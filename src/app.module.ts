@@ -22,6 +22,7 @@ import { OrderItem } from './orders/entities/order-item.entity';
 import { BundleItem } from './devices/entities/bundle-item.entity';
 import { PostsModule } from './posts/posts.module';
 import { HomeNotice } from './posts/entities/home-notice.entity';
+import { UploadsModule } from './uploads/uploads.module';
 
 @Module({
   imports: [
@@ -92,6 +93,7 @@ import { HomeNotice } from './posts/entities/home-notice.entity';
     DevicesModule,
     OrdersModule,
     PostsModule,
+    UploadsModule,
   ],
   controllers: [],
   providers: [],
