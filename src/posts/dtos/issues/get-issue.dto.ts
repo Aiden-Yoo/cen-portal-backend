@@ -7,6 +7,6 @@ export class GetIssueInput extends PickType(Issues, ['id']) {}
 
 @ObjectType()
 export class GetIssueOutput extends CoreOutput {
-  @Field(type => [Issues], { nullable: true })
-  issues?: Issues[];
+  @Field(type => Issues, { nullable: true })
+  issue?: Issues;
 }

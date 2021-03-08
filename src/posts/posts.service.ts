@@ -17,6 +17,7 @@ import {
   DeleteIssueOutput,
 } from './dtos/issues/delete-issue.dto';
 import { EditIssueInput, EditIssueOutput } from './dtos/issues/edit-issue.dto';
+import { GetIssueInput, GetIssueOutput } from './dtos/issues/get-issue.dto';
 import { HomeNotice } from './entities/home-notice.entity';
 import { Issues } from './entities/issues.entity';
 
@@ -85,22 +86,70 @@ export class IssueService {
     return canSee;
   }
 
-  async allIssues({ page, take }: AllIssuesInput): Promise<AllIssuesOutput> {
+  async allIssues(
+    user: User,
+    { page, take }: AllIssuesInput,
+  ): Promise<AllIssuesOutput> {
     try {
-      const [issues, totalResults] = await this.issues.findAndCount({
-        where: {
-          locked: false,
-        },
-        skip: (page - 1) * take,
-        take,
-        order: { id: 'ASC' },
-        relations: ['writer', 'files'],
-      });
+      let issues: Issues[];
+      let totalResults: number;
+      if (user.role === UserRole.CENSE) {
+        [issues, totalResults] = await this.issues.findAndCount({
+          where: {
+            locked: false,
+          },
+          skip: (page - 1) * take,
+          take,
+          order: { id: 'ASC' },
+          relations: ['writer', 'files'],
+        });
+      } else {
+        [issues, totalResults] = await this.issues.findAndCount({
+          where: {
+            locked: false,
+            writer: user,
+          },
+          skip: (page - 1) * take,
+          take,
+          order: { id: 'ASC' },
+          relations: ['writer', 'files'],
+        });
+      }
       return {
         ok: true,
         issues,
         totalPages: Math.ceil(totalResults / take),
         totalResults,
+      };
+    } catch (e) {
+      return {
+        ok: false,
+        error: '포스트를 불러올 수 없습니다.',
+      };
+    }
+  }
+
+  async getIssue(
+    user: User,
+    { id: issueId }: GetIssueInput,
+  ): Promise<GetIssueOutput> {
+    try {
+      const issue = await this.issues.findOne(issueId);
+      if (!issue) {
+        return {
+          ok: false,
+          error: '포스트를 찾을 수 없습니다.',
+        };
+      }
+      if (!this.canSeePost(user, issue)) {
+        return {
+          ok: false,
+          error: '작성자만 볼 수 있습니다.',
+        };
+      }
+      return {
+        ok: true,
+        issue,
       };
     } catch (e) {
       return {

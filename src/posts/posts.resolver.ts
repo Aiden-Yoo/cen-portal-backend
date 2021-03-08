@@ -20,6 +20,7 @@ import {
   DeleteIssueOutput,
 } from './dtos/issues/delete-issue.dto';
 import { EditIssueInput, EditIssueOutput } from './dtos/issues/edit-issue.dto';
+import { GetIssueInput, GetIssueOutput } from './dtos/issues/get-issue.dto';
 
 @Resolver(of => HomeNotice)
 export class PostResolver {
@@ -47,9 +48,19 @@ export class IssueResolver {
   @Query(returns => AllIssuesOutput)
   @Role(['CENSE', 'CEN', 'Distributor', 'Partner'])
   async allIssues(
+    @AuthUser() user: User,
     @Args('input') allIssuesInput: AllIssuesInput,
   ): Promise<AllIssuesOutput> {
-    return this.issuesService.allIssues(allIssuesInput);
+    return this.issuesService.allIssues(user, allIssuesInput);
+  }
+
+  @Query(returns => GetIssueOutput)
+  @Role(['CENSE', 'CEN', 'Distributor', 'Partner'])
+  async getIssue(
+    @AuthUser() user: User,
+    @Args('input') allIssuesInput: GetIssueInput,
+  ): Promise<GetIssueOutput> {
+    return this.issuesService.getIssue(user, allIssuesInput);
   }
 
   @Mutation(returns => CreateIssueOutput)
