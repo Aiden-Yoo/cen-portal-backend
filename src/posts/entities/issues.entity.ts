@@ -32,6 +32,11 @@ export class Issues extends CoreEntity {
   @Field(type => String, { nullable: true })
   kind: string;
 
+  @Column()
+  @Field(type => String)
+  @IsString()
+  title: string;
+
   @Column({ type: 'text' })
   @Field(type => String)
   @IsString()

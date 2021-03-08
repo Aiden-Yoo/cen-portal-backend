@@ -12,6 +12,7 @@ import { Issues } from 'src/posts/entities/issues.entity';
 export class EditIssueInput extends PickType(PartialType(Issues), [
   'locked',
   'kind',
+  'title',
   'content',
   'files',
 ]) {

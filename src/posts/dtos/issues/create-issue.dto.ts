@@ -6,6 +6,7 @@ import { Issues } from '../../entities/issues.entity';
 export class CreateIssueInput extends PickType(Issues, [
   'locked',
   'kind',
+  'title',
   'content',
   'files',
 ]) {}
