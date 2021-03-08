@@ -1,11 +1,11 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { IsArray, IsBoolean, IsString } from 'class-validator';
+import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
+import { IsBoolean, IsNumber, IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, DeleteDateColumn, Entity, ManyToOne } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Issues } from 'src/posts/entities/issues.entity';
 
-@InputType('IssuesInputType', { isAbstract: true })
+@InputType('IssueCommentsInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
 export class IssueComments extends CoreEntity {
@@ -16,12 +16,7 @@ export class IssueComments extends CoreEntity {
   @Column({ type: 'text' })
   @Field(type => String)
   @IsString()
-  content: string;
-
-  @Column()
-  @Field(type => String)
-  @IsArray()
-  files: string[];
+  comment: string;
 
   @ManyToOne(
     type => Issues,
@@ -30,4 +25,30 @@ export class IssueComments extends CoreEntity {
   )
   @Field(type => Issues)
   post: Issues;
+
+  // 동일 그룹 내 계층. 1부터 시작
+  @Column({ default: 1 })
+  @Field(type => Int)
+  @IsNumber()
+  class?: number;
+
+  // 동일 그룹 내 순서. 1부터 시작
+  @Column({ default: 1 })
+  @Field(type => Int)
+  @IsNumber()
+  order?: number;
+
+  @Column({ default: 1 })
+  @Field(type => Int)
+  @IsNumber()
+  groupNum?: number;
+
+  @Column({ default: false })
+  @Field(type => Boolean)
+  @IsBoolean()
+  isDeleted?: boolean;
+
+  @DeleteDateColumn({ nullable: true })
+  @Field(type => Date, { nullable: true })
+  deleteAt: Date;
 }

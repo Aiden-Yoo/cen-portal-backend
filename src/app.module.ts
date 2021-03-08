@@ -23,6 +23,9 @@ import { BundleItem } from './devices/entities/bundle-item.entity';
 import { PostsModule } from './posts/posts.module';
 import { HomeNotice } from './posts/entities/home-notice.entity';
 import { UploadsModule } from './uploads/uploads.module';
+import { Issues } from './posts/entities/issues.entity';
+import { IssueComments } from './posts/entities/issue-comments.entity';
+import { IssueFiles } from './posts/entities/issue-files.entity';
 
 @Module({
   imports: [
@@ -67,6 +70,9 @@ import { UploadsModule } from './uploads/uploads.module';
         OrderItem,
         ItemInfo,
         HomeNotice,
+        Issues,
+        IssueComments,
+        IssueFiles,
       ],
     }),
     GraphQLModule.forRoot({

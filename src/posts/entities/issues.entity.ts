@@ -1,9 +1,17 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { IsArray, IsBoolean, IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  RelationId,
+} from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { IssueComments } from './issue-comments.entity';
+import { IssueFiles } from './issue-files.entity';
 
 @InputType('IssuesInputType', { isAbstract: true })
 @ObjectType()
@@ -13,14 +21,15 @@ export class Issues extends CoreEntity {
   @Field(type => User, { nullable: true })
   writer: User;
 
-  @Column()
-  @Field(type => String)
-  @IsBoolean()
+  @RelationId((issues: Issues) => issues.writer)
+  writerId: number;
+
+  @Column({ nullable: true, default: false })
+  @Field(type => String, { nullable: true })
   locked: boolean;
 
-  @Column()
-  @Field(type => String)
-  @IsString()
+  @Column({ nullable: true })
+  @Field(type => String, { nullable: true })
   kind: string;
 
   @Column({ type: 'text' })
@@ -28,10 +37,13 @@ export class Issues extends CoreEntity {
   @IsString()
   content: string;
 
-  @Column()
-  @Field(type => String)
-  @IsArray()
-  files: string[];
+  @OneToMany(
+    type => IssueFiles,
+    issueFiles => issueFiles.issue,
+    { nullable: true },
+  )
+  @Field(type => [IssueFiles], { nullable: true })
+  files: IssueFiles[];
 
   @OneToMany(
     type => IssueComments,
@@ -39,5 +51,10 @@ export class Issues extends CoreEntity {
     { nullable: true },
   )
   @Field(type => [IssueComments], { nullable: true })
-  comment: IssueComments[];
+  @IsArray()
+  comment?: IssueComments[];
+
+  @DeleteDateColumn({ nullable: true })
+  @Field(type => Date, { nullable: true })
+  deleteAt: Date;
 }

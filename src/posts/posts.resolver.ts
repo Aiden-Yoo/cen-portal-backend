@@ -1,5 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { PostService } from './posts.service';
+import { PostService, IssueService } from './posts.service';
 import { HomeNotice } from './entities/home-notice.entity';
 import { AuthUser } from 'src/auth/auth-user.decorator';
 import { Role } from 'src/auth/role.decorator';
@@ -8,10 +8,18 @@ import {
   CreateHomeNoticeInput,
   CreateHomeNoticeOutput,
 } from './dtos/create-homeNotice.dto';
+import { GetHomeNoticeOutput } from './dtos/get-homeNotice.dto';
+import { Issues } from './entities/issues.entity';
 import {
-  GetHomeNoticeInput,
-  GetHomeNoticeOutput,
-} from './dtos/get-homeNotice.dto';
+  CreateIssueInput,
+  CreateIssueOutput,
+} from './dtos/issues/create-issue.dto';
+import { AllIssuesInput, AllIssuesOutput } from './dtos/issues/all-issues.dto';
+import {
+  DeleteIssueInput,
+  DeleteIssueOutput,
+} from './dtos/issues/delete-issue.dto';
+import { EditIssueInput, EditIssueOutput } from './dtos/issues/edit-issue.dto';
 
 @Resolver(of => HomeNotice)
 export class PostResolver {
@@ -29,5 +37,45 @@ export class PostResolver {
   @Query(returns => GetHomeNoticeOutput)
   async getHomeNotice(): Promise<GetHomeNoticeOutput> {
     return this.postsService.getHomeNotice();
+  }
+}
+
+@Resolver(of => Issues)
+export class IssueResolver {
+  constructor(private readonly issuesService: IssueService) {}
+
+  @Query(returns => AllIssuesOutput)
+  @Role(['CENSE', 'CEN', 'Distributor', 'Partner'])
+  async allIssues(
+    @Args('input') allIssuesInput: AllIssuesInput,
+  ): Promise<AllIssuesOutput> {
+    return this.issuesService.allIssues(allIssuesInput);
+  }
+
+  @Mutation(returns => CreateIssueOutput)
+  @Role(['CENSE', 'CEN', 'Distributor', 'Partner'])
+  async createIssue(
+    @AuthUser() writer: User,
+    @Args('input') createIssueInput: CreateIssueInput,
+  ): Promise<CreateIssueOutput> {
+    return this.issuesService.createIssue(writer, createIssueInput);
+  }
+
+  @Mutation(returns => DeleteIssueOutput)
+  @Role(['CENSE', 'CEN', 'Distributor', 'Partner'])
+  async deleteIssue(
+    @AuthUser() user: User,
+    @Args('input') deleteIssueInput: DeleteIssueInput,
+  ): Promise<DeleteIssueOutput> {
+    return this.issuesService.deleteIssue(user, deleteIssueInput);
+  }
+
+  @Mutation(returns => EditIssueOutput)
+  @Role(['CENSE', 'CEN', 'Distributor', 'Partner'])
+  async editIssue(
+    @AuthUser() user: User,
+    @Args('input') editIssueInput: EditIssueInput,
+  ): Promise<EditIssueOutput> {
+    return this.issuesService.editIssue(user, editIssueInput);
   }
 }
