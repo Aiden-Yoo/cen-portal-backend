@@ -284,7 +284,13 @@ export class IssueCommentService {
           },
           order: { order: 'DESC' },
         });
-        if (group) {
+        if (!group) {
+          return {
+            ok: false,
+            error: '그룹을 찾을 수 없습니다.',
+          };
+        }
+        if (group && depth) {
           // find same depth. if exist, order +1 or =1
           const equalDepth = await this.issueComments.findOne({
             where: { groupNum, depth },
@@ -297,6 +303,11 @@ export class IssueCommentService {
             // order=1
             order = 1;
           }
+        } else {
+          return {
+            ok: false,
+            error: '포스트를 생성할 수 없습니다.(depth 누락)',
+          };
         }
       } else {
         // if new comment, last groupNum + 1
