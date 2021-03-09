@@ -1,7 +1,13 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { IsBoolean, IsNumber, IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { Column, DeleteDateColumn, Entity, ManyToOne } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  RelationId,
+} from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Issues } from 'src/posts/entities/issues.entity';
 
@@ -26,11 +32,14 @@ export class IssueComments extends CoreEntity {
   @Field(type => Issues)
   post: Issues;
 
+  @RelationId((comments: IssueComments) => comments.post)
+  postId: number;
+
   // 동일 그룹 내 계층. 1부터 시작
   @Column({ default: 1 })
   @Field(type => Int)
   @IsNumber()
-  class?: number;
+  depth?: number;
 
   // 동일 그룹 내 순서. 1부터 시작
   @Column({ default: 1 })
@@ -42,11 +51,6 @@ export class IssueComments extends CoreEntity {
   @Field(type => Int)
   @IsNumber()
   groupNum?: number;
-
-  @Column({ default: false })
-  @Field(type => Boolean)
-  @IsBoolean()
-  isDeleted?: boolean;
 
   @DeleteDateColumn({ nullable: true })
   @Field(type => Date, { nullable: true })

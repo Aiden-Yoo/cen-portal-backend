@@ -13,12 +13,17 @@ import {
   CreateIssueOutput,
 } from './dtos/issues/create-issue.dto';
 import {
+  CreateIssueCommentInput,
+  CreateIssueCommentOutput,
+} from './dtos/issues/create-issueComment.dto';
+import {
   DeleteIssueInput,
   DeleteIssueOutput,
 } from './dtos/issues/delete-issue.dto';
 import { EditIssueInput, EditIssueOutput } from './dtos/issues/edit-issue.dto';
 import { GetIssueInput, GetIssueOutput } from './dtos/issues/get-issue.dto';
 import { HomeNotice } from './entities/home-notice.entity';
+import { IssueComments } from './entities/issue-comments.entity';
 import { Issues } from './entities/issues.entity';
 
 @Injectable()
@@ -240,6 +245,84 @@ export class IssueService {
       return {
         ok: false,
         error: '포스트를 수정할 수 없습니다.',
+      };
+    }
+  }
+}
+
+@Injectable()
+export class IssueCommentService {
+  constructor(
+    @InjectRepository(IssueComments)
+    private readonly issueComments: Repository<IssueComments>,
+    @InjectRepository(Issues)
+    private readonly issues: Repository<Issues>,
+  ) {}
+
+  async createIssueComment(
+    writer: User,
+    { issueId, depth, comment, groupNum, order }: CreateIssueCommentInput,
+  ): Promise<CreateIssueCommentOutput> {
+    // issueId,comment - 필수
+    // order - 자동
+    // groupNum - 선택. 없으면(댓) 생성, 있으면(대댓) order+1,
+    // depth - 선택. 대댓 시 지정
+    try {
+      const post = await this.issues.findOne(issueId);
+      if (!post) {
+        return {
+          ok: false,
+          error: '포스트를 찾을 수 없습니다.',
+        };
+      }
+
+      if (groupNum) {
+        // if groupNum exist, order + 1
+        const group = await this.issueComments.findOne({
+          where: {
+            groupNum,
+          },
+          order: { order: 'DESC' },
+        });
+        if (group) {
+          // find same depth. if exist, order +1 or =1
+          const equalDepth = await this.issueComments.findOne({
+            where: { groupNum, depth },
+            order: { order: 'DESC' },
+          });
+          if (equalDepth) {
+            // order+1
+            order = group.order + 1;
+          } else {
+            // order=1
+            order = 1;
+          }
+        }
+      } else {
+        // if new comment, last groupNum + 1
+        const lastGroup = await this.issueComments.findOne({
+          order: { groupNum: 'DESC' },
+        });
+        if (lastGroup.groupNum !== 1) {
+          groupNum = lastGroup.groupNum + 1;
+        }
+      }
+
+      await this.issueComments.save(
+        this.issueComments.create({
+          writer,
+          post,
+          depth,
+          comment,
+          groupNum,
+          order,
+        }),
+      );
+      return { ok: true };
+    } catch (e) {
+      return {
+        ok: false,
+        error: '포스트를 생성할 수 없습니다.',
       };
     }
   }

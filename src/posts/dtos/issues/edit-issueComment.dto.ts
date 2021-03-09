@@ -11,7 +11,7 @@ import { IssueComments } from 'src/posts/entities/issue-comments.entity';
 @InputType()
 export class EditIssueCommentInput extends PickType(
   PartialType(IssueComments),
-  ['comment', 'class', 'order', 'isDeleted'],
+  ['comment', 'depth', 'order'],
 ) {
   @Field(type => Number)
   commentId: number;

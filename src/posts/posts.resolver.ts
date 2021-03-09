@@ -1,5 +1,9 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { PostService, IssueService } from './posts.service';
+import {
+  PostService,
+  IssueService,
+  IssueCommentService,
+} from './posts.service';
 import { HomeNotice } from './entities/home-notice.entity';
 import { AuthUser } from 'src/auth/auth-user.decorator';
 import { Role } from 'src/auth/role.decorator';
@@ -21,6 +25,11 @@ import {
 } from './dtos/issues/delete-issue.dto';
 import { EditIssueInput, EditIssueOutput } from './dtos/issues/edit-issue.dto';
 import { GetIssueInput, GetIssueOutput } from './dtos/issues/get-issue.dto';
+import {
+  CreateIssueCommentInput,
+  CreateIssueCommentOutput,
+} from './dtos/issues/create-issueComment.dto';
+import { IssueComments } from './entities/issue-comments.entity';
 
 @Resolver(of => HomeNotice)
 export class PostResolver {
@@ -88,5 +97,22 @@ export class IssueResolver {
     @Args('input') editIssueInput: EditIssueInput,
   ): Promise<EditIssueOutput> {
     return this.issuesService.editIssue(user, editIssueInput);
+  }
+}
+
+@Resolver(of => IssueComments)
+export class IssueCommentResolver {
+  constructor(private readonly issueCommentsService: IssueCommentService) {}
+
+  @Mutation(returns => CreateIssueCommentOutput)
+  @Role(['CENSE', 'CEN', 'Distributor', 'Partner'])
+  async createIssueComment(
+    @AuthUser() writer: User,
+    @Args('input') createIssueCommentInput: CreateIssueCommentInput,
+  ): Promise<CreateIssueCommentOutput> {
+    return this.issueCommentsService.createIssueComment(
+      writer,
+      createIssueCommentInput,
+    );
   }
 }

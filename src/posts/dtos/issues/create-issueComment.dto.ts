@@ -12,7 +12,7 @@ import { IssueComments } from '../../entities/issue-comments.entity';
 @InputType()
 export class CreateIssueCommentInput extends PickType(
   PartialType(IssueComments),
-  ['comment', 'class', 'order', 'groupNum'],
+  ['comment', 'depth', 'order', 'groupNum'],
 ) {
   @Field(type => Int)
   issueId: number;
