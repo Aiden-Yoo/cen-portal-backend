@@ -20,6 +20,10 @@ import {
   DeleteIssueInput,
   DeleteIssueOutput,
 } from './dtos/issues/delete-issue.dto';
+import {
+  DeleteIssueCommentInput,
+  DeleteIssueCommentOutput,
+} from './dtos/issues/delete-issueComment.dto';
 import { EditIssueInput, EditIssueOutput } from './dtos/issues/edit-issue.dto';
 import { GetIssueInput, GetIssueOutput } from './dtos/issues/get-issue.dto';
 import {
@@ -376,7 +380,37 @@ export class IssueCommentService {
     } catch (e) {
       return {
         ok: false,
-        error: '포스트를 생성할 수 없습니다.',
+        error: '댓글을 생성할 수 없습니다.',
+      };
+    }
+  }
+
+  async deleteIssueComment(
+    user: User,
+    { commentId }: DeleteIssueCommentInput,
+  ): Promise<DeleteIssueCommentOutput> {
+    try {
+      const comment = await this.issueComments.findOne(commentId);
+      if (!comment) {
+        return {
+          ok: false,
+          error: '댓글을 찾을 수 없습니다.',
+        };
+      }
+      if (user.role !== UserRole.CENSE) {
+        if (comment.writer.id !== user.id) {
+          return {
+            ok: false,
+            error: '본인이 작성한 댓글만 삭제할 수 있습니다.',
+          };
+        }
+      }
+      await this.issueComments.softDelete(commentId);
+      return { ok: true };
+    } catch (e) {
+      return {
+        ok: false,
+        error: '댓글을 삭제할 수 없습니다.',
       };
     }
   }
