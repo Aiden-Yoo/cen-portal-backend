@@ -38,6 +38,10 @@ import {
   DeleteIssueCommentInput,
   DeleteIssueCommentOutput,
 } from './dtos/issues/delete-issueComment.dto';
+import {
+  EditIssueCommentInput,
+  EditIssueCommentOutput,
+} from './dtos/issues/edit-issueComment.dto';
 
 @Resolver(of => HomeNotice)
 export class PostResolver {
@@ -141,6 +145,18 @@ export class IssueCommentResolver {
     return this.issueCommentsService.deleteIssueComment(
       user,
       deleteIssueCommentInput,
+    );
+  }
+
+  @Mutation(returns => EditIssueCommentOutput)
+  @Role(['CENSE', 'CEN', 'Distributor', 'Partner'])
+  async editIssueComment(
+    @AuthUser() user: User,
+    @Args('input') editIssueCommentInput: EditIssueCommentInput,
+  ): Promise<EditIssueCommentOutput> {
+    return this.issueCommentsService.editIssueComment(
+      user,
+      editIssueCommentInput,
     );
   }
 }

@@ -25,6 +25,10 @@ import {
   DeleteIssueCommentOutput,
 } from './dtos/issues/delete-issueComment.dto';
 import { EditIssueInput, EditIssueOutput } from './dtos/issues/edit-issue.dto';
+import {
+  EditIssueCommentInput,
+  EditIssueCommentOutput,
+} from './dtos/issues/edit-issueComment.dto';
 import { GetIssueInput, GetIssueOutput } from './dtos/issues/get-issue.dto';
 import {
   GetIssueCommentInput,
@@ -411,6 +415,43 @@ export class IssueCommentService {
       return {
         ok: false,
         error: '댓글을 삭제할 수 없습니다.',
+      };
+    }
+  }
+
+  async editIssueComment(
+    user: User,
+    { commentId, comment }: EditIssueCommentInput,
+  ): Promise<EditIssueCommentOutput> {
+    try {
+      const getComment = await this.issueComments.findOne(commentId);
+      if (!getComment) {
+        return {
+          ok: false,
+          error: '댓글을 찾을 수 없습니다.',
+        };
+      }
+      if (getComment.writerId !== user.id) {
+        return {
+          ok: false,
+          error: '본인이 작성한 댓글만 수정할 수 있습니다.',
+        };
+      }
+      if (!comment) {
+        return {
+          ok: false,
+          error: '댓글 입력이 필요합니다.',
+        };
+      }
+      await this.issueComments.save({
+        id: commentId,
+        comment,
+      });
+      return { ok: true };
+    } catch (e) {
+      return {
+        ok: false,
+        error: '댓글을 수정할 수 없습니다.',
       };
     }
   }

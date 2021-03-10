@@ -19,6 +19,9 @@ export class IssueComments extends CoreEntity {
   @Field(type => User, { nullable: true })
   writer: User;
 
+  @RelationId((comments: IssueComments) => comments.writer)
+  writerId: number;
+
   @Column({ type: 'text' })
   @Field(type => String)
   @IsString()
