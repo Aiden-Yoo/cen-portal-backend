@@ -22,6 +22,10 @@ import {
 } from './dtos/issues/delete-issue.dto';
 import { EditIssueInput, EditIssueOutput } from './dtos/issues/edit-issue.dto';
 import { GetIssueInput, GetIssueOutput } from './dtos/issues/get-issue.dto';
+import {
+  GetIssueCommentInput,
+  GetIssueCommentOutput,
+} from './dtos/issues/get-issueComments.dto';
 import { HomeNotice } from './entities/home-notice.entity';
 import { IssueComments } from './entities/issue-comments.entity';
 import { Issues } from './entities/issues.entity';
@@ -258,6 +262,45 @@ export class IssueCommentService {
     @InjectRepository(Issues)
     private readonly issues: Repository<Issues>,
   ) {}
+
+  async getIssueComment({
+    issueId,
+    take,
+    page,
+  }: GetIssueCommentInput): Promise<GetIssueCommentOutput> {
+    try {
+      const issue = await this.issues.findOne(issueId);
+      if (!issue) {
+        return {
+          ok: false,
+          error: '포스트를 찾을 수 없습니다.',
+        };
+      }
+      const [comments, totalResults] = await this.issueComments.findAndCount({
+        where: {
+          post: issue,
+        },
+        skip: (page - 1) * take,
+        take,
+        order: {
+          groupNum: 'ASC',
+          depth: 'ASC',
+          order: 'ASC',
+        },
+      });
+      return {
+        ok: true,
+        comments,
+        totalResults,
+        totalPages: Math.ceil(totalResults / take),
+      };
+    } catch (e) {
+      return {
+        ok: false,
+        error: '댓글을 불러올 수 없습니다.',
+      };
+    }
+  }
 
   async createIssueComment(
     writer: User,

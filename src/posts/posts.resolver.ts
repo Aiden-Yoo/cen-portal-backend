@@ -30,6 +30,10 @@ import {
   CreateIssueCommentOutput,
 } from './dtos/issues/create-issueComment.dto';
 import { IssueComments } from './entities/issue-comments.entity';
+import {
+  GetIssueCommentInput,
+  GetIssueCommentOutput,
+} from './dtos/issues/get-issueComments.dto';
 
 @Resolver(of => HomeNotice)
 export class PostResolver {
@@ -67,9 +71,9 @@ export class IssueResolver {
   @Role(['CENSE', 'CEN', 'Distributor', 'Partner'])
   async getIssue(
     @AuthUser() user: User,
-    @Args('input') allIssuesInput: GetIssueInput,
+    @Args('input') getIssuesInput: GetIssueInput,
   ): Promise<GetIssueOutput> {
-    return this.issuesService.getIssue(user, allIssuesInput);
+    return this.issuesService.getIssue(user, getIssuesInput);
   }
 
   @Mutation(returns => CreateIssueOutput)
@@ -103,6 +107,14 @@ export class IssueResolver {
 @Resolver(of => IssueComments)
 export class IssueCommentResolver {
   constructor(private readonly issueCommentsService: IssueCommentService) {}
+
+  @Query(returns => GetIssueCommentOutput)
+  @Role(['CENSE', 'CEN', 'Distributor', 'Partner'])
+  async getIssueComment(
+    @Args('input') getIssueCommentInput: GetIssueCommentInput,
+  ): Promise<GetIssueCommentOutput> {
+    return this.issueCommentsService.getIssueComment(getIssueCommentInput);
+  }
 
   @Mutation(returns => CreateIssueCommentOutput)
   @Role(['CENSE', 'CEN', 'Distributor', 'Partner'])

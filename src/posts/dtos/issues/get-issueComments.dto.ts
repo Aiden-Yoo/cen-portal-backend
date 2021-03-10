@@ -1,7 +1,9 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
-import { CoreOutput } from 'src/common/dtos/output.dto';
-import { PaginationInput } from 'src/common/dtos/pagination.dto';
-import { Issues } from 'src/posts/entities/issues.entity';
+import {
+  PaginationInput,
+  PaginationOutput,
+} from 'src/common/dtos/pagination.dto';
+import { IssueComments } from 'src/posts/entities/issue-comments.entity';
 
 @InputType()
 export class GetIssueCommentInput extends PaginationInput {
@@ -10,7 +12,7 @@ export class GetIssueCommentInput extends PaginationInput {
 }
 
 @ObjectType()
-export class GetIssueCommentOutput extends CoreOutput {
-  @Field(type => [Issues], { nullable: true })
-  issues?: Issues[];
+export class GetIssueCommentOutput extends PaginationOutput {
+  @Field(type => [IssueComments], { nullable: true })
+  comments?: IssueComments[];
 }
