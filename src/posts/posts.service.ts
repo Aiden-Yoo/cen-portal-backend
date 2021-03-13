@@ -93,6 +93,8 @@ export class IssueService {
   constructor(
     @InjectRepository(Issues)
     private readonly issues: Repository<Issues>,
+    @InjectRepository(IssueComments)
+    private readonly issueComments: Repository<IssueComments>,
   ) {}
 
   canSeePost(user: User, issue: Issues): boolean {
@@ -144,6 +146,14 @@ export class IssueService {
         error: '포스트를 불러올 수 없습니다.',
       };
     }
+  }
+
+  async commentsNum(issues: Issues): Promise<number> {
+    return this.issueComments.count({
+      where: {
+        post: issues,
+      },
+    });
   }
 
   async getIssue(
@@ -326,7 +336,6 @@ export class IssueCommentService {
           error: '포스트를 찾을 수 없습니다.',
         };
       }
-
       if (groupNum) {
         // if groupNum exist, order + 1
         const group = await this.issueComments.findOne({
@@ -437,7 +446,7 @@ export class IssueCommentService {
           error: '본인이 작성한 댓글만 수정할 수 있습니다.',
         };
       }
-      if (!comment) {
+      if (!comment || comment === '') {
         return {
           ok: false,
           error: '댓글 입력이 필요합니다.',

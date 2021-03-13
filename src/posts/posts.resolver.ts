@@ -1,4 +1,12 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Int,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import {
   PostService,
   IssueService,
@@ -73,6 +81,11 @@ export class IssueResolver {
     @Args('input') allIssuesInput: AllIssuesInput,
   ): Promise<AllIssuesOutput> {
     return this.issuesService.allIssues(user, allIssuesInput);
+  }
+
+  @ResolveField(type => Int)
+  async commentsNum(@Parent() issues: Issues): Promise<number> {
+    return this.issuesService.commentsNum(issues);
   }
 
   @Query(returns => GetIssueOutput)

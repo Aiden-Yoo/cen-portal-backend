@@ -1,4 +1,4 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { IsArray, IsBoolean, IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import {
@@ -25,7 +25,7 @@ export class Issues extends CoreEntity {
   writerId: number;
 
   @Column({ nullable: true, default: false })
-  @Field(type => String, { nullable: true })
+  @Field(type => Boolean, { nullable: true })
   locked: boolean;
 
   @Column({ nullable: true })
