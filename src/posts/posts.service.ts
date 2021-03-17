@@ -114,23 +114,23 @@ export class IssueService {
       let totalResults: number;
       if (user.role === UserRole.CENSE) {
         [issues, totalResults] = await this.issues.findAndCount({
-          where: {
-            locked: false,
-          },
+          // where: {
+          //   locked: false,
+          // },
           skip: (page - 1) * take,
           take,
-          order: { id: 'ASC' },
+          order: { id: 'DESC' },
           relations: ['writer', 'files'],
         });
       } else {
         [issues, totalResults] = await this.issues.findAndCount({
           where: {
-            locked: false,
+            // locked: false,
             writer: user,
           },
           skip: (page - 1) * take,
           take,
-          order: { id: 'ASC' },
+          order: { id: 'DESC' },
           relations: ['writer', 'files'],
         });
       }
