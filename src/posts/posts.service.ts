@@ -36,6 +36,7 @@ import {
 } from './dtos/issues/get-issueComments.dto';
 import { HomeNotice } from './entities/home-notice.entity';
 import { IssueComments } from './entities/issue-comments.entity';
+import { IssueFiles } from './entities/issue-files.entity';
 import { Issues } from './entities/issues.entity';
 
 @Injectable()
@@ -95,6 +96,8 @@ export class IssueService {
     private readonly issues: Repository<Issues>,
     @InjectRepository(IssueComments)
     private readonly issueComments: Repository<IssueComments>,
+    @InjectRepository(IssueFiles)
+    private readonly issueFiles: Repository<IssueFiles>,
   ) {}
 
   canSeePost(user: User, issue: Issues): boolean {
@@ -191,13 +194,27 @@ export class IssueService {
     createIssueInput: CreateIssueInput,
   ): Promise<CreateIssueOutput> {
     try {
-      await this.issues.save(
+      const issue = await this.issues.save(
         this.issues.create({
           writer,
           ...createIssueInput,
         }),
       );
-      return { ok: true };
+      if (createIssueInput.files.length !== 0) {
+        createIssueInput.files.map(async file => {
+          await this.issueFiles.save(
+            this.issueFiles.create({
+              issue,
+              path: file.path,
+            }),
+          );
+        });
+      }
+
+      return {
+        issue,
+        ok: true,
+      };
     } catch (e) {
       return {
         ok: false,

@@ -1,5 +1,10 @@
-import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
-import { IsArray, IsBoolean, IsString } from 'class-validator';
+import {
+  Field,
+  InputType,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql';
+import { IsArray, IsEnum, IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import {
   Column,
@@ -12,6 +17,14 @@ import {
 import { User } from 'src/users/entities/user.entity';
 import { IssueComments } from './issue-comments.entity';
 import { IssueFiles } from './issue-files.entity';
+
+export enum KindRole {
+  Case = 'Case',
+  Question = 'Question',
+  ETC = 'ETC',
+}
+
+registerEnumType(KindRole, { name: 'KindRole' });
 
 @InputType('IssuesInputType', { isAbstract: true })
 @ObjectType()
@@ -28,9 +41,10 @@ export class Issues extends CoreEntity {
   @Field(type => Boolean, { nullable: true })
   locked: boolean;
 
-  @Column({ nullable: true })
-  @Field(type => String, { nullable: true })
-  kind: string;
+  @Column({ type: 'enum', enum: KindRole })
+  @Field(type => KindRole)
+  @IsEnum(KindRole)
+  kind: KindRole;
 
   @Column()
   @Field(type => String)

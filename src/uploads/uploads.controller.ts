@@ -7,6 +7,8 @@ import {
   UploadedFile,
   UploadedFiles,
   UseInterceptors,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -94,7 +96,12 @@ export class UploadsController {
       };
       response.push(fileResponse);
     });
-    return response;
+    // return response;
+    return {
+      status: HttpStatus.OK,
+      message: 'Uploaded file successfully!',
+      data: response,
+    };
   }
 
   @Get('firmwares/:path')
