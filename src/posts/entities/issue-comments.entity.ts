@@ -50,8 +50,8 @@ export class IssueComments extends CoreEntity {
   @IsNumber()
   order?: number;
 
-  @Column({ default: 1 })
-  @Field(type => Int)
+  @Column({ default: 1, nullable: true })
+  @Field(type => Int, { nullable: true })
   @IsNumber()
   groupNum?: number;
 

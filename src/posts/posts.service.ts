@@ -164,18 +164,30 @@ export class IssueService {
     { id: issueId }: GetIssueInput,
   ): Promise<GetIssueOutput> {
     try {
-      const issue = await this.issues.findOne(issueId);
+      const issue = await this.issues.findOne(issueId, {
+        relations: ['writer', 'files'],
+      });
+      const comment = await this.issueComments.find({
+        where: {
+          post: issue,
+        },
+        relations: ['writer'],
+        withDeleted: false,
+      });
       if (!issue) {
         return {
           ok: false,
           error: '포스트를 찾을 수 없습니다.',
         };
       }
-      if (!this.canSeePost(user, issue)) {
+      if (!this.canSeePost(user, issue) || user.role !== UserRole.CENSE) {
         return {
           ok: false,
           error: '작성자만 볼 수 있습니다.',
         };
+      }
+      if (comment) {
+        issue.comment = comment;
       }
       return {
         ok: true,
@@ -202,6 +214,7 @@ export class IssueService {
       );
       if (createIssueInput.files.length !== 0) {
         createIssueInput.files.map(async file => {
+          console.log(file);
           await this.issueFiles.save(
             this.issueFiles.create({
               issue,
@@ -256,7 +269,7 @@ export class IssueService {
 
   async editIssue(
     user: User,
-    { issueId, content, files, kind, locked }: EditIssueInput,
+    { issueId, content, files, kind, locked, title }: EditIssueInput,
   ): Promise<EditIssueOutput> {
     try {
       const issue = await this.issues.findOne(issueId);
@@ -272,15 +285,27 @@ export class IssueService {
           error: '작성자만 볼 수 있습니다.',
         };
       }
+      if (files) {
+        await this.issueFiles.delete({ issue });
+        files.map(async file => {
+          await this.issueFiles.save(
+            this.issueFiles.create({
+              issue,
+              path: file.path,
+            }),
+          );
+        });
+      }
       await this.issues.save({
         id: issueId,
         content,
-        files,
         kind,
         locked,
+        title,
       });
       return { ok: true };
     } catch (e) {
+      console.log(e);
       return {
         ok: false,
         error: '포스트를 수정할 수 없습니다.',
@@ -391,7 +416,9 @@ export class IssueCommentService {
         const lastGroup = await this.issueComments.findOne({
           order: { groupNum: 'DESC' },
         });
-        if (lastGroup.groupNum !== 1) {
+        if (!lastGroup) {
+          groupNum = 1;
+        } else if (lastGroup.groupNum !== 1) {
           groupNum = lastGroup.groupNum + 1;
         }
       }
@@ -408,6 +435,7 @@ export class IssueCommentService {
       );
       return { ok: true };
     } catch (e) {
+      console.log(e);
       return {
         ok: false,
         error: '댓글을 생성할 수 없습니다.',
