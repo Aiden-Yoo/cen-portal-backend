@@ -3,7 +3,7 @@ import {
   PaginationInput,
   PaginationOutput,
 } from 'src/common/dtos/pagination.dto';
-import { Issues } from 'src/posts/entities/issues.entity';
+import { Issues } from 'src/issues/entities/issues.entity';
 
 @InputType()
 export class AllIssuesInput extends PaginationInput {}

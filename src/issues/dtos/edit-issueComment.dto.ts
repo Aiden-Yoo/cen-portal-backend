@@ -6,7 +6,7 @@ import {
   PickType,
 } from '@nestjs/graphql';
 import { CoreOutput } from 'src/common/dtos/output.dto';
-import { IssueComments } from 'src/posts/entities/issue-comments.entity';
+import { IssueComments } from 'src/issues/entities/issue-comments.entity';
 
 @InputType()
 export class EditIssueCommentInput extends PickType(

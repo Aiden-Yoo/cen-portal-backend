@@ -6,7 +6,7 @@ import {
   PickType,
 } from '@nestjs/graphql';
 import { CoreOutput } from 'src/common/dtos/output.dto';
-import { Issues } from 'src/posts/entities/issues.entity';
+import { Issues } from 'src/issues/entities/issues.entity';
 
 @InputType()
 export class EditIssueInput extends PickType(PartialType(Issues), [

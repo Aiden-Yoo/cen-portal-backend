@@ -9,7 +9,7 @@ import {
   RelationId,
 } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
-import { Issues } from 'src/posts/entities/issues.entity';
+import { Issues } from 'src/issues/entities/issues.entity';
 
 @InputType('IssueCommentsInputType', { isAbstract: true })
 @ObjectType()

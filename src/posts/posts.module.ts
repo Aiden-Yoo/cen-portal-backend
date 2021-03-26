@@ -1,31 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HomeNotice } from './entities/home-notice.entity';
-import { Issues } from './entities/issues.entity';
-import { IssueComments } from './entities/issue-comments.entity';
-import {
-  IssueCommentResolver,
-  IssueResolver,
-  PostResolver,
-} from './posts.resolver';
-import {
-  IssueCommentService,
-  IssueService,
-  PostService,
-} from './posts.service';
-import { IssueFiles } from './entities/issue-files.entity';
+import { PostResolver } from './posts.resolver';
+import { PostService } from './posts.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([HomeNotice, Issues, IssueComments, IssueFiles]),
-  ],
-  providers: [
-    PostResolver,
-    PostService,
-    IssueResolver,
-    IssueService,
-    IssueCommentResolver,
-    IssueCommentService,
-  ],
+  imports: [TypeOrmModule.forFeature([HomeNotice])],
+  providers: [PostResolver, PostService],
 })
 export class PostsModule {}
