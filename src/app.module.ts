@@ -26,6 +26,11 @@ import { UploadsModule } from './uploads/uploads.module';
 import { Issues } from './issues/entities/issues.entity';
 import { IssueComments } from './issues/entities/issue-comments.entity';
 import { IssueFiles } from './issues/entities/issue-files.entity';
+import { IssuesModule } from './issues/issues.module';
+import { WorkaroundsModule } from './workarounds/workarounds.module';
+import { Workarounds } from './workarounds/entities/workarounds.entity';
+import { WorkaroundComments } from './workarounds/entities/workaround-comments.entity';
+import { WorkaroundFiles } from './workarounds/entities/workaround-files.entity';
 
 @Module({
   imports: [
@@ -73,6 +78,9 @@ import { IssueFiles } from './issues/entities/issue-files.entity';
         Issues,
         IssueComments,
         IssueFiles,
+        Workarounds,
+        WorkaroundComments,
+        WorkaroundFiles,
       ],
     }),
     GraphQLModule.forRoot({
@@ -99,7 +107,9 @@ import { IssueFiles } from './issues/entities/issue-files.entity';
     DevicesModule,
     OrdersModule,
     PostsModule,
+    IssuesModule,
     UploadsModule,
+    WorkaroundsModule,
   ],
   controllers: [],
   providers: [],

@@ -104,6 +104,33 @@ export class UploadsController {
     };
   }
 
+  @Post('workarounds')
+  @UseInterceptors(
+    FilesInterceptor('file', 10, {
+      storage: diskStorage({
+        destination: './uploads/workarounds',
+        filename: editFileName,
+      }),
+      // fileFilter: imageFileFilter,
+    }),
+  )
+  uploadWorkaroundFiles(@UploadedFiles() files: Express.Multer.File[]) {
+    const response = [];
+    files.forEach(file => {
+      const fileResponse = {
+        originalname: file.originalname,
+        filename: file.filename,
+      };
+      response.push(fileResponse);
+    });
+    // return response;
+    return {
+      status: HttpStatus.OK,
+      message: 'Uploaded file successfully!',
+      data: response,
+    };
+  }
+
   @Get('firmwares/:path')
   seeFirmwareFile(@Param('path') file, @Res() res) {
     return res.sendFile(file, { root: './uploads/firmwares' });
@@ -129,5 +156,10 @@ export class UploadsController {
     // } catch (error) {
     //   return res.status(500).json({ error });
     // }
+  }
+
+  @Get('workarounds/:path')
+  seeWorkaroundFile(@Param('path') file, @Res() res) {
+    return res.sendFile(file, { root: './uploads/workarounds' });
   }
 }
