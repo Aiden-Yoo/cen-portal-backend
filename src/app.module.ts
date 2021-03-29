@@ -31,6 +31,10 @@ import { WorkaroundsModule } from './workarounds/workarounds.module';
 import { Workarounds } from './workarounds/entities/workarounds.entity';
 import { WorkaroundComments } from './workarounds/entities/workaround-comments.entity';
 import { WorkaroundFiles } from './workarounds/entities/workaround-files.entity';
+import { FirmwaresModule } from './firmwares/firmwares.module';
+import { Firmwares } from './firmwares/entities/firmwares.entity';
+import { FirmwareFiles } from './firmwares/entities/firmware-files.entity';
+import { DocumentsModule } from './documents/documents.module';
 
 @Module({
   imports: [
@@ -81,6 +85,8 @@ import { WorkaroundFiles } from './workarounds/entities/workaround-files.entity'
         Workarounds,
         WorkaroundComments,
         WorkaroundFiles,
+        Firmwares,
+        FirmwareFiles,
       ],
     }),
     GraphQLModule.forRoot({
@@ -110,6 +116,8 @@ import { WorkaroundFiles } from './workarounds/entities/workaround-files.entity'
     IssuesModule,
     UploadsModule,
     WorkaroundsModule,
+    FirmwaresModule,
+    DocumentsModule,
   ],
   controllers: [],
   providers: [],

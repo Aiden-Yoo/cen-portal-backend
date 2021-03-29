@@ -9,17 +9,21 @@ export const imageFileFilter = (req, file, callback) => {
 
 export const editFileName = (req, file, callback) => {
   let name = '';
+  let fileExtName = extname(file.originalname);
   const tempName = file.originalname.split('.');
-  for (let i = 0; i < tempName.length; i++) {
-    if (i !== tempName.length - 1) {
-      if (i === 0) {
-        name += tempName[i];
-      } else {
-        name += '.' + tempName[i];
+  if (tempName.length === 1) {
+    name += tempName;
+  } else {
+    for (let i = 0; i < tempName.length; i++) {
+      if (i !== tempName.length - 1) {
+        if (i === 0) {
+          name += tempName[i];
+        } else {
+          name += '.' + tempName[i];
+        }
       }
     }
   }
-  const fileExtName = extname(file.originalname);
   const randomName = Array(32)
     .fill(null)
     .map(() => Math.round(Math.random() * 16).toString(16))

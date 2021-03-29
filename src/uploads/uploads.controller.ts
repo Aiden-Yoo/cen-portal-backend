@@ -53,7 +53,11 @@ export class UploadsController {
       };
       response.push(fileResponse);
     });
-    return response;
+    return {
+      status: HttpStatus.OK,
+      message: 'Uploaded file successfully!',
+      data: response,
+    };
   }
 
   @Post('documents')
@@ -74,7 +78,11 @@ export class UploadsController {
       };
       response.push(fileResponse);
     });
-    return response;
+    return {
+      status: HttpStatus.OK,
+      message: 'Uploaded file successfully!',
+      data: response,
+    };
   }
 
   @Post('issues')
