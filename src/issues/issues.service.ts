@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User, UserRole } from 'src/users/entities/user.entity';
-import { Repository } from 'typeorm';
+import { Any, Equal, In, Not, Raw, Repository } from 'typeorm';
 import { AllIssuesInput, AllIssuesOutput } from '../issues/dtos/all-issues.dto';
 import { CreateIssueInput, CreateIssueOutput } from './dtos/create-issue.dto';
 import {
@@ -63,25 +63,24 @@ export class IssueService {
       let totalResults: number;
       if (user.role === UserRole.CENSE) {
         [issues, totalResults] = await this.issues.findAndCount({
-          // where: {
-          //   locked: false,
-          // },
-          skip: (page - 1) * take,
-          take,
-          order: { id: 'DESC' },
-          relations: ['writer', 'files'],
-        });
-      } else {
-        [issues, totalResults] = await this.issues.findAndCount({
           where: {
             // locked: false,
-            writer: user,
           },
           skip: (page - 1) * take,
           take,
           order: { id: 'DESC' },
           relations: ['writer', 'files'],
         });
+      } else {
+        [issues, totalResults] = await this.issues
+          .createQueryBuilder('issues')
+          .leftJoinAndSelect('issues.writer', 'writer')
+          .leftJoinAndSelect('issues.files', 'files')
+          .where('writer.company = :company', { company: user.company })
+          .orderBy('issues.id', 'DESC')
+          .skip((page - 1) * take)
+          .take(take)
+          .getManyAndCount();
       }
       return {
         ok: true,
@@ -90,6 +89,7 @@ export class IssueService {
         totalResults,
       };
     } catch (e) {
+      console.log(e);
       return {
         ok: false,
         error: '포스트를 불러올 수 없습니다.',

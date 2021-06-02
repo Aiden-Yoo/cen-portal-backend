@@ -17,6 +17,7 @@ import {
   ApprovalAccountInput,
   ApprovalAccountOutput,
 } from './dtos/approval-account.dto';
+import { AllUsersInput, AllUsersOutput } from './dtos/all-users.dto';
 
 @Injectable()
 export class UserService {
@@ -114,6 +115,27 @@ export class UserService {
       };
     } catch (error) {
       return { ok: false, error: '사용자를 찾을 수 없습니다.' };
+    }
+  }
+
+  async allUsers({ page, take }: AllUsersInput): Promise<AllUsersOutput> {
+    try {
+      const [users, totalResults] = await this.users.findAndCount({
+        skip: (page - 1) * take,
+        take,
+        order: { id: 'DESC' },
+      });
+      return {
+        ok: true,
+        users,
+        totalPages: Math.ceil(totalResults / take),
+        totalResults,
+      };
+    } catch (e) {
+      return {
+        ok: false,
+        error: '사용자 정보를 불러올 수 없습니다.',
+      };
     }
   }
 

@@ -1,6 +1,7 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { AuthUser } from 'src/auth/auth-user.decorator';
 import { Role } from 'src/auth/role.decorator';
+import { AllUsersInput, AllUsersOutput } from './dtos/all-users.dto';
 import {
   ApprovalAccountInput,
   ApprovalAccountOutput,
@@ -44,6 +45,14 @@ export class UserResolver {
     @Args() userProfileInput: UserProfileInput,
   ): Promise<UserProfileOutput> {
     return this.usersService.findById(userProfileInput.userId);
+  }
+
+  @Query(returns => AllUsersOutput)
+  @Role(['CENSE'])
+  async allUsers(
+    @Args('input') allUsersInput: AllUsersInput,
+  ): Promise<AllUsersOutput> {
+    return this.usersService.allUsers(allUsersInput);
   }
 
   @Mutation(returns => EditProfileOutput)
