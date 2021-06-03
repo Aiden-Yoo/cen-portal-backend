@@ -1,0 +1,28 @@
+{
+  "apps": [
+    {
+      "name": "was",
+      "script": "dist/main.js",
+      "instances": 2,
+      "exec_mode": "cluster",
+      "autorestart": true,
+      "watch": false,
+      "error_file": "./log/err.log",
+      "out_file": "./log/out.log",
+      "log_file": "./log/combined.log",
+      "log_date_format": "YYYY-MM-DD HH:mm:ss.SSS",
+      "env": {
+        "NODE_ENV": "",
+        "DB_HOST": "",
+        "DB_PORT": "",
+        "DB_USERNAME": "",
+        "DB_PASSWORD": "",
+        "DB_NAME": "",
+        "PRIVATE_KEY": "",
+        "MAILGUN_API_KEY": "",
+        "MAILGUN_DOMAIN_NAME": "",
+        "MAILGUN_FROM_EMAIL": ""
+      }
+    }
+  ]
+}

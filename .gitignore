@@ -1,4 +1,6 @@
 /uploads
+ecosystem.prod.json
+ecosystem.dev.json
 
 # Logs
 logs
@@ -74,6 +76,7 @@ web_modules/
 .env
 .env.test
 .env.dev
+.env.prod
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache

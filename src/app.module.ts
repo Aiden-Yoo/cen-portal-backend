@@ -42,7 +42,7 @@ import { DocumentFiles } from './documents/entities/document-files.entity';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test',
+      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.prod',
       ignoreEnvFile: process.env.NODE_ENV === 'prod',
       validationSchema: Joi.object({
         NODE_ENV: Joi.string()
@@ -66,9 +66,9 @@ import { DocumentFiles } from './documents/entities/document-files.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      synchronize: process.env.NOTE_ENV !== 'prod',
+      synchronize: process.env.NODE_ENV !== 'prod',
       logging:
-        process.env.NOTE_ENV !== 'prod' && process.env.NOTE_ENV !== 'test',
+        process.env.NODE_ENV !== 'prod' && process.env.NODE_ENV !== 'test',
       entities: [
         User,
         Verification,
