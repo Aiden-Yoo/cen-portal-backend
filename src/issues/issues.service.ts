@@ -126,7 +126,7 @@ export class IssueService {
           error: '포스트를 찾을 수 없습니다.',
         };
       }
-      if (!this.canCompany(user, issue) || user.role !== UserRole.CENSE) {
+      if (!this.canCompany(user, issue)) {
         return {
           ok: false,
           error: '소속 포스트만 볼 수 있습니다.',

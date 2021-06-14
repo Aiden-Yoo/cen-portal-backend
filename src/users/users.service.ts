@@ -12,12 +12,12 @@ import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
 import { Verification } from './entities/verification.entity';
 import { VerifyEmailOutput } from './dtos/verify-email.dto';
 import { UserProfileOutput } from './dtos/user-profile.dto';
-import { MailService } from 'src/mail/mail.service';
 import {
   ApprovalAccountInput,
   ApprovalAccountOutput,
 } from './dtos/approval-account.dto';
 import { AllUsersInput, AllUsersOutput } from './dtos/all-users.dto';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class UserService {
@@ -64,7 +64,7 @@ export class UserService {
           user,
         }),
       );
-      this.mailService.sendVerificationEmail(user.email, verification.code);
+      this.mailService.sendVerificationEmail(user, verification.code);
       return { ok: true };
     } catch (e) {
       return {
@@ -205,7 +205,7 @@ export class UserService {
         await this.verifications.delete(verification.id);
         return { ok: true };
       }
-      return { ok: false, error: '메일 인증이 필요합니다.' };
+      return { ok: false, error: '만료된 인증코드 입니다.' };
     } catch (error) {
       return { ok: false, error: '메일을 인증하지 못했습니다.' };
     }

@@ -19,9 +19,9 @@
         "DB_PASSWORD": "",
         "DB_NAME": "",
         "PRIVATE_KEY": "",
-        "MAILGUN_API_KEY": "",
-        "MAILGUN_DOMAIN_NAME": "",
-        "MAILGUN_FROM_EMAIL": ""
+        "SVR_DOMAIN": "",
+        "MAIL_ID": "",
+        "MAIL_PW": ""
       }
     }
   ]

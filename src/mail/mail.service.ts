@@ -1,51 +1,26 @@
-import got from 'got';
-import * as FormData from 'form-data';
-import { Inject, Injectable } from '@nestjs/common';
-import { CONFIG_OPTIONS } from 'src/common/common.constants';
-import { EmailVar, MailModuleOptions } from './mail.interfaces';
+import { MailerService } from '@nestjs-modules/mailer';
+import { Injectable } from '@nestjs/common';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class MailService {
-  constructor(
-    @Inject(CONFIG_OPTIONS) private readonly options: MailModuleOptions,
-  ) {}
+  constructor(private mailerService: MailerService) {}
 
-  async sendEmail(
-    subject: string,
-    template: string,
-    emailVars: EmailVar[],
-  ): Promise<boolean> {
-    const form = new FormData();
-    form.append(
-      'from',
-      `Aiden from Nuber Eats <mailgun@${this.options.domain}>`,
-    );
-    form.append('to', `you1367@gmail.com`);
-    form.append('subject', subject);
-    form.append('template', template);
-    emailVars.forEach(eVar => form.append(`v:${eVar.key}`, eVar.value));
+  async sendVerificationEmail(user: User, token: string) {
     try {
-      await got.post(
-        `https://api.mailgun.net/v3/${this.options.domain}/messages`,
-        {
-          headers: {
-            Authorization: `Basic ${Buffer.from(
-              `api:${this.options.apiKey}`,
-            ).toString('base64')}`,
-          },
-          body: form,
+      const url = `${process.env.SVR_DOMAIN}/auth/confirm?token=${token}`;
+      await this.mailerService.sendMail({
+        from: '"코어엣지네트웍스" <noreply@coreedge.co.kr>',
+        to: user.email,
+        subject: '[코어엣지네트웍스] 이메일 인증 메일',
+        template: './confirmation',
+        context: {
+          name: user.name,
+          url,
         },
-      );
-      return true;
-    } catch (error) {
-      return false;
+      });
+    } catch (e) {
+      console.log(e);
     }
-  }
-
-  sendVerificationEmail(email: string, code: string) {
-    this.sendEmail('Verify Your Email', 'nuber-eats', [
-      { key: 'code', value: code },
-      { key: 'username', value: email },
-    ]);
   }
 }

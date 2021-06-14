@@ -79,28 +79,29 @@ export class WorkaroundService {
     try {
       let workarounds: Workarounds[];
       let totalResults: number;
-      if (user.role === UserRole.CENSE) {
-        [workarounds, totalResults] = await this.workarounds.findAndCount({
-          // where: {
-          //   locked: false,
-          // },
-          skip: (page - 1) * take,
-          take,
-          order: { id: 'DESC' },
-          relations: ['writer', 'files'],
-        });
-      } else {
-        [workarounds, totalResults] = await this.workarounds.findAndCount({
-          where: {
-            // locked: false,
-            writer: user,
-          },
-          skip: (page - 1) * take,
-          take,
-          order: { id: 'DESC' },
-          relations: ['writer', 'files'],
-        });
-      }
+      // if (user.role === UserRole.CENSE) {
+      [workarounds, totalResults] = await this.workarounds.findAndCount({
+        // where: {
+        //   locked: false,
+        // },
+        skip: (page - 1) * take,
+        take,
+        order: { id: 'DESC' },
+        relations: ['writer', 'files'],
+      });
+      // }
+      // else {
+      //   [workarounds, totalResults] = await this.workarounds.findAndCount({
+      //     where: {
+      //       // locked: false,
+      //       writer: user,
+      //     },
+      //     skip: (page - 1) * take,
+      //     take,
+      //     order: { id: 'DESC' },
+      //     relations: ['writer', 'files'],
+      //   });
+      // }
       return {
         ok: true,
         workarounds,
