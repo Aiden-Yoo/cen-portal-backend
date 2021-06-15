@@ -78,7 +78,7 @@ export class UserService {
     try {
       const user = await this.users.findOne(
         { email },
-        { select: ['id', 'password'] },
+        { select: ['email', 'password', 'verified', 'isLocked'] },
       );
       if (!user) {
         return {
@@ -91,6 +91,25 @@ export class UserService {
         return {
           ok: false,
           error: '비밀번호가 일치하지 않습니다.',
+        };
+      }
+      const exists = await this.verifications.findOne({ user });
+      if (exists) {
+        return {
+          ok: false,
+          error: '이메일 인증이 되지 않았습니다. 메일함을 확인해주세요.',
+        };
+      }
+      if (!user.verified) {
+        return {
+          ok: false,
+          error: '관리자 승인 대기중입니다. 관리자에게 문의 바랍니다.',
+        };
+      }
+      if (user.isLocked) {
+        return {
+          ok: false,
+          error: '계정이 잠겼습니다. 관리자에게 문의 바랍니다.',
         };
       }
       const token = this.jwtService.sign(user.id);
@@ -200,12 +219,12 @@ export class UserService {
         { relations: ['user'] },
       );
       if (verification) {
-        verification.user.verified = true;
-        await this.users.save(verification.user);
+        // verification.user.verified = true;
+        // await this.users.save(verification.user);
         await this.verifications.delete(verification.id);
         return { ok: true };
       }
-      return { ok: false, error: '만료된 인증코드 입니다.' };
+      return { ok: false, error: '유효하지 않은 인증코드 입니다.' };
     } catch (error) {
       return { ok: false, error: '메일을 인증하지 못했습니다.' };
     }
@@ -222,7 +241,6 @@ export class UserService {
           error: '사용자를 찾을 수 없습니다.',
         };
       }
-      console.log(approvalAccountInput);
       await this.users.save({
         id: approvalAccountInput.userId,
         ...approvalAccountInput,
