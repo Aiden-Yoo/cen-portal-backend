@@ -6,7 +6,7 @@ import {
   CreateAccountOutput,
 } from './dtos/create-account.dto';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
-import { User } from './entities/user.entity';
+import { User, UserRole } from './entities/user.entity';
 import { JwtService } from 'src/jwt/jwt.service';
 import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
 import { Verification } from './entities/verification.entity';
@@ -18,6 +18,7 @@ import {
 } from './dtos/approval-account.dto';
 import { AllUsersInput, AllUsersOutput } from './dtos/all-users.dto';
 import { MailService } from 'src/mail/mail.service';
+import { EditUserInput, EditUserOutput } from './dtos/edit-user.dto';
 
 @Injectable()
 export class UserService {
@@ -209,6 +210,28 @@ export class UserService {
       };
     } catch (error) {
       return { ok: false, error: '프로필을 업데이트할 수 없습니다.' };
+    }
+  }
+
+  async editUser({
+    userId,
+    role,
+    isLocked,
+  }: EditUserInput): Promise<EditUserOutput> {
+    try {
+      const user = await this.users.findOne(userId);
+      if (role) {
+        user.role = role;
+      }
+      if (isLocked !== null) {
+        user.isLocked = isLocked;
+      }
+      await this.users.save(user);
+      return {
+        ok: true,
+      };
+    } catch (error) {
+      return { ok: false, error: '유저 상태를 변경할 수 없습니다.' };
     }
   }
 

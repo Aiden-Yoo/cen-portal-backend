@@ -11,6 +11,7 @@ import {
   CreateAccountOutput,
 } from './dtos/create-account.dto';
 import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
+import { EditUserInput, EditUserOutput } from './dtos/edit-user.dto';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { UserProfileInput, UserProfileOutput } from './dtos/user-profile.dto';
 import { VerifyEmailInput, VerifyEmailOutput } from './dtos/verify-email.dto';
@@ -62,6 +63,15 @@ export class UserResolver {
     @Args('input') editProfileInput: EditProfileInput,
   ): Promise<EditProfileOutput> {
     return this.usersService.editProfile(authUser.id, editProfileInput);
+  }
+
+  @Mutation(returns => EditUserOutput)
+  @Role(['CENSE'])
+  async editUser(
+    @AuthUser() authUser: User,
+    @Args('input') edituserInput: EditUserInput,
+  ): Promise<EditUserOutput> {
+    return this.usersService.editUser(edituserInput);
   }
 
   @Mutation(returns => VerifyEmailOutput)
