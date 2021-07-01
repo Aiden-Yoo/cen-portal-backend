@@ -64,7 +64,7 @@ export class UserService {
           user,
         }),
       );
-      this.mailService.sendVerificationEmail(user, verification.code);
+      await this.mailService.sendVerificationEmail(user, verification.code);
       return { ok: true };
     } catch (e) {
       return {
@@ -78,7 +78,7 @@ export class UserService {
     try {
       const user = await this.users.findOne(
         { email },
-        { select: ['email', 'password', 'verified', 'isLocked'] },
+        { select: ['id', 'email', 'password', 'verified', 'isLocked'] },
       );
       if (!user) {
         return {

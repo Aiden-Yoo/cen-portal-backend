@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Bundle } from 'src/devices/entities/bundle.entity';
 import { Part } from 'src/devices/entities/part.entity';
+import { MailService } from 'src/mail/mail.service';
 import { Partner } from 'src/partners/entities/partner.entity';
 import { User, UserRole } from 'src/users/entities/user.entity';
 import { Repository, Raw } from 'typeorm';
@@ -34,6 +35,7 @@ export class OrderService {
     private readonly bundles: Repository<Bundle>,
     @InjectRepository(Part)
     private readonly parts: Repository<Part>,
+    private readonly mailService: MailService,
   ) {}
 
   async createOrder(
@@ -77,7 +79,9 @@ export class OrderService {
         orderItems.push(orderItem);
       }
       // for order
-      const findOrder = await this.orders.findOne(order.id);
+      const findOrder = await this.orders.findOne(order.id, {
+        relations: ['writer', 'partner'],
+      });
       order = await this.orders.save({
         ...findOrder,
         items: orderItems,
@@ -104,6 +108,7 @@ export class OrderService {
           }
         }
       }
+      await this.mailService.notifyNewOrder(findOrder);
       return {
         ok: true,
       };
