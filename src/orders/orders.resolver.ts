@@ -77,7 +77,7 @@ export class OrderResolver {
   }
 
   @Query(returns => GetOrderItemsOutput)
-  @Role(['CENSE', 'CEN'])
+  @Role(['CENSE', 'CEN', 'Partner'])
   async getOrderItems(
     @AuthUser() user: User,
     @Args('input') getOrderItemsInput: GetOrderItemsInput,

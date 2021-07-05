@@ -372,7 +372,11 @@ export class OrderService {
     { orderId, page, take }: GetOrderItemsInput,
   ): Promise<GetOrderItemsOutput> {
     try {
-      if (user.role === UserRole.CENSE || user.role === UserRole.CEN) {
+      if (
+        user.role === UserRole.CENSE ||
+        user.role === UserRole.CEN ||
+        user.role === UserRole.Partner
+      ) {
         const [itemInfos, totalResults] = await this.itemInfos.findAndCount({
           where: {
             order: orderId,
