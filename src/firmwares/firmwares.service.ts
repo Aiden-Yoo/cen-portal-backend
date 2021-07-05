@@ -69,10 +69,10 @@ export class FirmwareService {
         });
       } else {
         [firmwares, totalResults] = await this.firmwares.findAndCount({
-          where: {
-            // locked: false,
-            writer: user,
-          },
+          // where: {
+          // locked: false,
+          // writer: user,
+          // },
           skip: (page - 1) * take,
           take,
           order: { id: 'DESC' },

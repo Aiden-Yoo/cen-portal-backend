@@ -69,10 +69,10 @@ export class DocumentService {
         });
       } else {
         [documents, totalResults] = await this.documents.findAndCount({
-          where: {
-            // locked: false,
-            writer: user,
-          },
+          // where: {
+          // locked: false,
+          // writer: user,
+          // },
           skip: (page - 1) * take,
           take,
           order: { id: 'DESC' },
