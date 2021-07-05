@@ -72,6 +72,11 @@ export class User extends CoreEntity {
   @IsBoolean()
   isLocked: boolean;
 
+  @Column({ default: false })
+  @Field(type => Boolean)
+  @IsBoolean()
+  orderAuth: boolean;
+
   @OneToMany(
     type => Order,
     order => order.writer,

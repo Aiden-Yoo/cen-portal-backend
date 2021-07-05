@@ -59,7 +59,7 @@ export class OrderResolver {
   }
 
   @Query(returns => GetOrdersOutput)
-  @Role(['CENSE', 'CEN'])
+  @Role(['CENSE', 'CEN', 'Partner'])
   async getOrders(
     @AuthUser() user: User,
     @Args('input') getOrdersInput: GetOrdersInput,
@@ -68,7 +68,7 @@ export class OrderResolver {
   }
 
   @Query(returns => GetOrderOutput)
-  @Role(['CENSE', 'CEN'])
+  @Role(['CENSE', 'CEN', 'Partner'])
   async getOrder(
     @AuthUser() user: User,
     @Args('input') getOrderInput: GetOrderInput,

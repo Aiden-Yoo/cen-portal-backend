@@ -124,6 +124,11 @@ export class OrderService {
     let canSee = true;
     if (user.role === UserRole.CEN && order.writerId !== user.id) {
       canSee = false;
+    } else if (
+      user.role === UserRole.Partner &&
+      order.partner.name === user.company
+    ) {
+      canSee = true;
     }
     return canSee;
   }
@@ -271,6 +276,27 @@ export class OrderService {
           },
           relations: ['itemInfos', 'partner'],
         });
+      } else if (user.role === UserRole.Partner) {
+        const partner = await this.partners.findOne({ name: user.company });
+        if (!user.orderAuth) {
+          return {
+            ok: false,
+            error: '권한이 없습니다. 관리자에게 문의해주세요.',
+          };
+        }
+        if (!partner) {
+          return {
+            ok: false,
+            error: '등록된 출고기록이 없습니다.',
+          };
+        }
+        orders = await this.orders.find({
+          where: {
+            partner,
+            ...(status && { status }),
+          },
+          relations: ['itemInfos', 'partner'],
+        });
       }
       return {
         ok: true,
@@ -289,9 +315,33 @@ export class OrderService {
     { id: orderId }: GetOrderInput,
   ): Promise<GetOrderOutput> {
     try {
-      const order = await this.orders.findOne(orderId, {
-        relations: ['writer', 'partner', 'items', 'items.bundle'],
-      });
+      let order: Order;
+      if (user.role === UserRole.Partner) {
+        const partner = await this.partners.findOne({ name: user.company });
+        if (!user.orderAuth) {
+          return {
+            ok: false,
+            error: '권한이 없습니다. 관리자에게 문의해주세요.',
+          };
+        }
+        if (!partner) {
+          return {
+            ok: false,
+            error: '등록된 출고기록이 없습니다.',
+          };
+        }
+        order = await this.orders.findOne(orderId, {
+          where: {
+            partner,
+          },
+          relations: ['writer', 'partner', 'items', 'items.bundle'],
+        });
+      }
+      if (user.role !== UserRole.Partner) {
+        order = await this.orders.findOne(orderId, {
+          relations: ['writer', 'partner', 'items', 'items.bundle'],
+        });
+      }
       if (!order) {
         return {
           ok: false,
@@ -301,7 +351,7 @@ export class OrderService {
       if (!this.canSeeOrder(user, order)) {
         return {
           ok: false,
-          error: '작성자만 볼 수 있습니다.',
+          error: '권한이 없습니다.',
         };
       }
       return {
