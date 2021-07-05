@@ -1,5 +1,6 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
+import { Issues } from 'src/issues/entities/issues.entity';
 import {
   DeliveryMethod,
   DeliveryType,
@@ -7,6 +8,7 @@ import {
   OrderClassification,
 } from 'src/orders/entities/order.entity';
 import { User } from 'src/users/entities/user.entity';
+import { Workarounds } from 'src/workarounds/entities/workarounds.entity';
 
 @Injectable()
 export class MailService {
@@ -65,7 +67,7 @@ export class MailService {
 
       this.mailerService.sendMail({
         from: '"코어엣지네트웍스" <noreply@coreedge.co.kr>',
-        to: 'djyoo@coreedge.co.kr',
+        to: `${process.env.STOCK_MAIL}`,
         subject: `[CEN Portal] 출고요청서 등록_${order.projectName}/${order.partner.name}/${order.salesPerson}`,
         template: './newOrder',
         context: {
@@ -79,6 +81,38 @@ export class MailService {
           url: `${process.env.SVR_DOMAIN}/cen/orders/${order.id}`,
         },
       });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async notifyNewReply(
+    writer: User,
+    post: Workarounds | Issues,
+    comment: string,
+  ) {
+    try {
+      if (writer.id !== post.writerId) {
+        let board: string;
+        if (post.constructor === Issues) {
+          board = 'cases';
+        }
+        if (post.constructor === Workarounds) {
+          board = 'workarounds';
+        }
+        board &&
+          this.mailerService.sendMail({
+            from: '"코어엣지네트웍스" <noreply@coreedge.co.kr>',
+            to: `${writer.email}`,
+            subject: `[CEN Portal] 댓글 등록(${post.title})`,
+            template: './newReply',
+            context: {
+              writer: writer.name,
+              comment,
+              url: `${process.env.SVR_DOMAIN}/partner/${board}/${post.id}`,
+            },
+          });
+      }
     } catch (e) {
       console.log(e);
     }

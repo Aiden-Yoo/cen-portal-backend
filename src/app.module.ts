@@ -55,6 +55,8 @@ import { DocumentFiles } from './documents/entities/document-files.entity';
         DB_NAME: Joi.string().required(),
         PRIVATE_KEY: Joi.string().required(),
         SVR_DOMAIN: Joi.string().required(),
+        TECH_MAIL: Joi.string().required(),
+        STOCK_MAIL: Joi.string().required(),
         MAIL_ID: Joi.string().required(),
         MAIL_PW: Joi.string().required(),
       }),

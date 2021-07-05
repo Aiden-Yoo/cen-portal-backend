@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { MailService } from 'src/mail/mail.service';
 import { User, UserRole } from 'src/users/entities/user.entity';
 import { Any, Equal, In, Not, Raw, Repository } from 'typeorm';
 import { AllIssuesInput, AllIssuesOutput } from '../issues/dtos/all-issues.dto';
@@ -267,6 +268,7 @@ export class IssueCommentService {
     private readonly issueComments: Repository<IssueComments>,
     @InjectRepository(Issues)
     private readonly issues: Repository<Issues>,
+    private readonly mailService: MailService,
   ) {}
 
   async getIssueComment({
@@ -379,6 +381,7 @@ export class IssueCommentService {
           order,
         }),
       );
+      this.mailService.notifyNewReply(writer, post, comment);
       return { ok: true };
     } catch (e) {
       console.log(e);

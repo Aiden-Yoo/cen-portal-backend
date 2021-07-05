@@ -20,6 +20,8 @@
         "DB_NAME": "",
         "PRIVATE_KEY": "",
         "SVR_DOMAIN": "",
+        "TECH_MAIL": "",
+        "STOCK_MAIL": "",
         "MAIL_ID": "",
         "MAIL_PW": ""
       }

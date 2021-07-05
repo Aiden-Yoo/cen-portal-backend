@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { MailService } from 'src/mail/mail.service';
 import { User, UserRole } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import {
@@ -286,6 +287,7 @@ export class WorkaroundCommentService {
     private readonly workaroundComments: Repository<WorkaroundComments>,
     @InjectRepository(Workarounds)
     private readonly workarounds: Repository<Workarounds>,
+    private readonly mailService: MailService,
   ) {}
 
   async getWorkaroundComment({
@@ -407,6 +409,7 @@ export class WorkaroundCommentService {
           order,
         }),
       );
+      this.mailService.notifyNewReply(writer, post, comment);
       return { ok: true };
     } catch (e) {
       console.log(e);
