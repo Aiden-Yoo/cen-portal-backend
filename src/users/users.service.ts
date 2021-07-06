@@ -216,6 +216,7 @@ export class UserService {
   async editUser({
     userId,
     role,
+    verified,
     isLocked,
     orderAuth,
   }: EditUserInput): Promise<EditUserOutput> {
@@ -223,6 +224,9 @@ export class UserService {
       const user = await this.users.findOne(userId);
       if (role) {
         user.role = role;
+      }
+      if (verified !== null) {
+        user.verified = verified;
       }
       if (isLocked !== null) {
         user.isLocked = isLocked;

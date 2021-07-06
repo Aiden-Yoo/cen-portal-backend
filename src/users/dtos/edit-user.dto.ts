@@ -13,7 +13,7 @@ export class EditUserOutput extends CoreOutput {}
 
 @InputType()
 export class EditUserInput extends PartialType(
-  PickType(User, ['role', 'isLocked', 'orderAuth']),
+  PickType(User, ['role', 'verified', 'isLocked', 'orderAuth']),
 ) {
   @Field(type => Number)
   userId: number;
