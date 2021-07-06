@@ -217,6 +217,7 @@ export class UserService {
     userId,
     role,
     isLocked,
+    orderAuth,
   }: EditUserInput): Promise<EditUserOutput> {
     try {
       const user = await this.users.findOne(userId);
@@ -225,6 +226,9 @@ export class UserService {
       }
       if (isLocked !== null) {
         user.isLocked = isLocked;
+      }
+      if (orderAuth !== null) {
+        user.orderAuth = orderAuth;
       }
       await this.users.save(user);
       return {
