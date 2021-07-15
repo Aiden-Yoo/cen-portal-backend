@@ -41,28 +41,38 @@ export class MailService {
       switch (order.deliveryType) {
         case DeliveryType.Partial:
           deliveryType = '부분출고';
+          break;
         case DeliveryType.Total:
           deliveryType = '전체출고';
+          break;
       }
       switch (order.deliveryMethod) {
         case DeliveryMethod.Cargo:
           deliveryMethod = '화물';
+          break;
         case DeliveryMethod.Directly:
           deliveryMethod = '직접배송';
+          break;
         case DeliveryMethod.Parcel:
           deliveryMethod = '택배';
+          break;
         case DeliveryMethod.Quick:
           deliveryMethod = '퀵';
+          break;
       }
       switch (order.classification) {
         case OrderClassification.Demo:
           classification = '데모';
+          break;
         case OrderClassification.DoA:
           classification = 'DoA';
+          break;
         case OrderClassification.RMA:
           classification = 'RMA';
+          break;
         case OrderClassification.Sale:
           classification = '판매';
+          break;
       }
 
       this.mailerService.sendMail({
