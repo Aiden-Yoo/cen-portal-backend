@@ -98,6 +98,7 @@ import { DocumentFiles } from './documents/entities/document-files.entity';
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
       autoSchemaFile: true,
+      playground: process.env.NODE_ENV !== 'prod',
       context: ({ req, connection }) => {
         const TOKEN_KEY = 'x-jwt';
         return {
