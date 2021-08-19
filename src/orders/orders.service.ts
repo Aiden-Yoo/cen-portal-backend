@@ -257,7 +257,7 @@ export class OrderService {
 
   async getOrders(
     user: User,
-    { status, page, take }: GetOrdersInput,
+    { page, take, status, classification }: GetOrdersInput,
   ): Promise<GetOrdersOutput> {
     try {
       let orders: Order[];
@@ -270,6 +270,7 @@ export class OrderService {
             ...(status === OrderStatus.Notcompleted && {
               status: Not(OrderStatus.Completed),
             }),
+            ...(classification && { classification }),
           },
           skip: (page - 1) * take,
           take,
@@ -281,12 +282,15 @@ export class OrderService {
           skip: (page - 1) * take,
           take,
           order: { id: 'DESC' },
-          where: {
-            ...(status === OrderStatus.Completed && { status }),
-            ...(status === OrderStatus.Notcompleted && {
-              status: Not(OrderStatus.Completed),
-            }),
-          },
+          where: [
+            {
+              ...(status === OrderStatus.Completed && { status }),
+              ...(status === OrderStatus.Notcompleted && {
+                status: Not(OrderStatus.Completed),
+              }),
+              ...(classification && { classification }),
+            },
+          ],
           relations: ['partner'],
         });
       } else if (user.role === UserRole.Partner) {
@@ -310,6 +314,7 @@ export class OrderService {
             ...(status === OrderStatus.Notcompleted && {
               status: Not(OrderStatus.Completed),
             }),
+            ...(classification && { classification }),
           },
           skip: (page - 1) * take,
           take,

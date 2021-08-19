@@ -3,12 +3,19 @@ import {
   PaginationInput,
   PaginationOutput,
 } from 'src/common/dtos/pagination.dto';
-import { Order, OrderStatus } from '../entities/order.entity';
+import {
+  Order,
+  OrderClassification,
+  OrderStatus,
+} from '../entities/order.entity';
 
 @InputType()
 export class GetOrdersInput extends PaginationInput {
   @Field(type => OrderStatus, { nullable: true })
   status?: OrderStatus;
+
+  @Field(type => OrderClassification, { nullable: true })
+  classification?: OrderClassification;
 }
 
 @ObjectType()
