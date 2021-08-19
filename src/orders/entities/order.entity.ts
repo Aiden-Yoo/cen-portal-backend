@@ -34,6 +34,7 @@ export enum OrderStatus {
   Canceled = 'Canceled',
   Partial = 'Partial',
   Completed = 'Completed',
+  Notcompleted = 'Notcompleted',
 }
 
 export enum OrderClassification {

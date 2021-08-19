@@ -5,7 +5,7 @@ import { Part } from 'src/devices/entities/part.entity';
 import { MailService } from 'src/mail/mail.service';
 import { Partner } from 'src/partners/entities/partner.entity';
 import { User, UserRole } from 'src/users/entities/user.entity';
-import { Repository, Raw } from 'typeorm';
+import { Repository, Raw, Not } from 'typeorm';
 import { CreateOrderInput, CreateOrderOutput } from './dtos/create-order.dto';
 import { DeleteOrderInput, DeleteOrderOutput } from './dtos/delete-order.dto';
 import { EditItemInfoInput, EditItemInfoOutput } from './dtos/edit-item.dto';
@@ -257,24 +257,37 @@ export class OrderService {
 
   async getOrders(
     user: User,
-    { status }: GetOrdersInput,
+    { status, page, take }: GetOrdersInput,
   ): Promise<GetOrdersOutput> {
     try {
       let orders: Order[];
+      let totalResults: number;
       if (user.role === UserRole.CEN) {
-        orders = await this.orders.find({
+        [orders, totalResults] = await this.orders.findAndCount({
           where: {
             writer: user,
-            ...(status && { status }),
+            ...(status === OrderStatus.Completed && { status }),
+            ...(status === OrderStatus.Notcompleted && {
+              status: Not(OrderStatus.Completed),
+            }),
           },
-          relations: ['itemInfos', 'partner'],
+          skip: (page - 1) * take,
+          take,
+          order: { id: 'DESC' },
+          relations: ['partner'],
         });
       } else if (user.role === UserRole.CENSE) {
-        orders = await this.orders.find({
+        [orders, totalResults] = await this.orders.findAndCount({
+          skip: (page - 1) * take,
+          take,
+          order: { id: 'DESC' },
           where: {
-            ...(status && { status }),
+            ...(status === OrderStatus.Completed && { status }),
+            ...(status === OrderStatus.Notcompleted && {
+              status: Not(OrderStatus.Completed),
+            }),
           },
-          relations: ['itemInfos', 'partner'],
+          relations: ['partner'],
         });
       } else if (user.role === UserRole.Partner) {
         const partner = await this.partners.findOne({ name: user.company });
@@ -290,17 +303,25 @@ export class OrderService {
             error: '등록된 출고기록이 없습니다.',
           };
         }
-        orders = await this.orders.find({
+        [orders, totalResults] = await this.orders.findAndCount({
           where: {
             partner,
-            ...(status && { status }),
+            ...(status === OrderStatus.Completed && { status }),
+            ...(status === OrderStatus.Notcompleted && {
+              status: Not(OrderStatus.Completed),
+            }),
           },
-          relations: ['itemInfos', 'partner'],
+          skip: (page - 1) * take,
+          take,
+          order: { id: 'DESC' },
+          relations: ['partner'],
         });
       }
       return {
         ok: true,
         orders,
+        totalPages: Math.ceil(totalResults / take),
+        totalResults,
       };
     } catch (e) {
       return {
