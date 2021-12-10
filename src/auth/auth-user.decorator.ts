@@ -8,3 +8,10 @@ export const AuthUser = createParamDecorator(
     return user;
   },
 );
+
+export const ResGql = createParamDecorator(
+  (_data: unknown, context: ExecutionContext): Response => {
+    const gqlContext = GqlExecutionContext.create(context).getContext();
+    return gqlContext.res;
+  },
+);

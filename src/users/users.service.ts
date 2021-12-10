@@ -7,7 +7,9 @@ import {
 } from './dtos/create-account.dto';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { User, UserRole } from './entities/user.entity';
-import { JwtService } from 'src/jwt/jwt.service';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { Response } from 'express';
 import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
 import { Verification } from './entities/verification.entity';
 import { VerifyEmailOutput } from './dtos/verify-email.dto';
@@ -19,6 +21,8 @@ import {
 import { AllUsersInput, AllUsersOutput } from './dtos/all-users.dto';
 import { MailService } from 'src/mail/mail.service';
 import { EditUserInput, EditUserOutput } from './dtos/edit-user.dto';
+import { LogoutOutput } from './dtos/logout.dto';
+import { access } from 'fs';
 
 @Injectable()
 export class UserService {
@@ -27,8 +31,33 @@ export class UserService {
     @InjectRepository(Verification)
     private readonly verifications: Repository<Verification>,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
     private readonly mailService: MailService,
   ) {}
+
+  // async getUser(id: number): Promise<UserProfileOutput> {
+  //   try {
+  //     const user = await this.users.findOneOrFail({ id });
+  //     return {
+  //       ok: true,
+  //       user,
+  //     };
+  //   } catch (error) {
+  //     return { ok: false, error: '사용자를 찾을 수 없습니다.' };
+  //   }
+  // }
+
+  // async findById(id: number): Promise<UserProfileOutput> {
+  //   try {
+  //     const user = await this.users.findOneOrFail({ id });
+  //     return {
+  //       ok: true,
+  //       user,
+  //     };
+  //   } catch (error) {
+  //     return { ok: false, error: '사용자를 찾을 수 없습니다.' };
+  //   }
+  // }
 
   async createAccount({
     email,
@@ -75,7 +104,10 @@ export class UserService {
     }
   }
 
-  async login({ email, password }: LoginInput): Promise<LoginOutput> {
+  async login(
+    res: Response,
+    { email, password }: LoginInput,
+  ): Promise<LoginOutput> {
     try {
       const user = await this.users.findOne(
         { email },
@@ -113,15 +145,84 @@ export class UserService {
           error: '계정이 잠겼습니다. 관리자에게 문의 바랍니다.',
         };
       }
-      const token = this.jwtService.sign(user.id);
+      // const token = this.jwtService.sign(user.id);
+      const accessToken = await this.getAccessTokenAndSetCookie(res, user.id);
+      await this.getRefreshTokenAndSetCookie(res, user.id);
       return {
         ok: true,
-        token,
+        // token,
+        token: accessToken,
       };
     } catch (error) {
       return {
         ok: false,
         error,
+      };
+    }
+  }
+
+  private async getAccessTokenAndSetCookie(res: Response, id: number) {
+    const payload = { id };
+    const accessToken = this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
+      expiresIn: `${this.configService.get(
+        'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
+      )}s`,
+    });
+    const accessOption = {
+      path: '/',
+      httpOnly: true,
+      maxAge:
+        Number(this.configService.get('JWT_ACCESS_TOKEN_EXPIRATION_TIME')) *
+        1000,
+    };
+    res.cookie('Authentication', 'Bearer ' + accessToken, accessOption);
+    return accessToken;
+  }
+
+  private async getRefreshTokenAndSetCookie(res: Response, id: number) {
+    const payload = { id };
+    const refreshToken = this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
+      expiresIn: `${this.configService.get(
+        'JWT_REFRESH_TOKEN_EXPIRATION_TIME',
+      )}s`,
+    });
+    const refreshOption = {
+      path: '/',
+      httpOnly: true,
+      maxAge:
+        Number(this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME')) *
+        1000,
+    };
+    res.cookie('Refresh', 'Bearer ' + refreshToken, refreshOption);
+    return refreshToken;
+  }
+
+  async refresh(res: Response, id: number) {
+    const accessToken = await this.getAccessTokenAndSetCookie(res, id);
+    return 'Bearer ' + accessToken;
+  }
+
+  async matchCheck(res: Response, id: number) {
+    const accessToken = await this.getAccessTokenAndSetCookie(res, id);
+    return 'Bearer ' + accessToken;
+  }
+
+  async logout(res: Response, user: User): Promise<LogoutOutput> {
+    try {
+      const option = {
+        path: '/',
+        httpOnly: true,
+        maxAge: 0,
+      };
+      res.cookie('Authentication', '', option);
+      res.cookie('Refresh', '', option);
+      return { ok: true };
+    } catch (e) {
+      return {
+        ok: false,
+        error: '로그아웃 중 오류가 발생했습니다.',
       };
     }
   }

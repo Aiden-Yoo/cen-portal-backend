@@ -53,12 +53,17 @@ import { DocumentFiles } from './documents/entities/document-files.entity';
         DB_USERNAME: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
         DB_NAME: Joi.string().required(),
-        PRIVATE_KEY: Joi.string().required(),
+        // PRIVATE_KEY: Joi.string().required(),
         SVR_DOMAIN: Joi.string().required(),
         TECH_MAIL: Joi.string().required(),
         STOCK_MAIL: Joi.string().required(),
         MAIL_ID: Joi.string().required(),
         MAIL_PW: Joi.string().required(),
+
+        JWT_ACCESS_TOKEN_SECRET: Joi.string().required(),
+        JWT_ACCESS_TOKEN_EXPIRATION_TIME: Joi.string().required(),
+        JWT_REFRESH_TOKEN_SECRET: Joi.string().required(),
+        JWT_REFRESH_TOKEN_EXPIRATION_TIME: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -99,16 +104,18 @@ import { DocumentFiles } from './documents/entities/document-files.entity';
       installSubscriptionHandlers: true,
       autoSchemaFile: true,
       playground: process.env.NODE_ENV !== 'prod',
-      context: ({ req, connection }) => {
-        const TOKEN_KEY = 'x-jwt';
-        return {
-          token: req ? req.headers[TOKEN_KEY] : connection.context[TOKEN_KEY],
-        };
-      },
+      // context: ({ req, connection }) => {
+      //   const TOKEN_KEY = 'x-jwt';
+      //   return {
+      //     token: req ? req.headers[TOKEN_KEY] : connection.context[TOKEN_KEY],
+      //   };
+      // },
+      cors: { origin: true, credentials: true },
+      context: ({ req, res }) => ({ req, res }),
     }),
-    JwtModule.forRoot({
-      privateKey: process.env.PRIVATE_KEY,
-    }),
+    // JwtModule.forRoot({
+    //   privateKey: process.env.PRIVATE_KEY,
+    // }),
     MailModule.forRoot({
       mailId: process.env.MAIL_ID,
       mailPw: process.env.MAIL_PW,

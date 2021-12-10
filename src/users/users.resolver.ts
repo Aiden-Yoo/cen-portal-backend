@@ -1,5 +1,6 @@
+import { Response } from 'express';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { AuthUser } from 'src/auth/auth-user.decorator';
+import { AuthUser, ResGql } from 'src/auth/auth-user.decorator';
 import { Role } from 'src/auth/role.decorator';
 import { AllUsersInput, AllUsersOutput } from './dtos/all-users.dto';
 import {
@@ -17,6 +18,7 @@ import { UserProfileInput, UserProfileOutput } from './dtos/user-profile.dto';
 import { VerifyEmailInput, VerifyEmailOutput } from './dtos/verify-email.dto';
 import { User } from './entities/user.entity';
 import { UserService } from './users.service';
+import { LogoutOutput } from './dtos/logout.dto';
 
 @Resolver(of => User)
 export class UserResolver {
@@ -30,8 +32,20 @@ export class UserResolver {
   }
 
   @Mutation(returns => LoginOutput)
-  async login(@Args('input') loginInput: LoginInput): Promise<LoginOutput> {
-    return this.usersService.login(loginInput);
+  async login(
+    @ResGql() res: Response,
+    @Args('input') loginInput: LoginInput,
+  ): Promise<LoginOutput> {
+    return this.usersService.login(res, loginInput);
+  }
+
+  @Mutation(() => LogoutOutput)
+  @Role(['Any'])
+  async logout(
+    @ResGql() res: Response,
+    @AuthUser() user: User,
+  ): Promise<LogoutOutput> {
+    return this.usersService.logout(res, user);
   }
 
   @Query(returns => User)
