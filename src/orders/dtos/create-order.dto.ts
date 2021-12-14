@@ -27,6 +27,7 @@ export class CreateOrderInput extends PickType(Order, [
   'deliveryMethod',
   'remark',
   'status',
+  'warranty',
 ]) {
   @Field(type => Int)
   partnerId: number;

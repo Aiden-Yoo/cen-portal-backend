@@ -180,4 +180,8 @@ export class Order extends CoreEntity {
   @Field(type => OrderStatus)
   // @IsEnum(OrderStatus)
   status?: OrderStatus;
+
+  @Column({ nullable: true })
+  @Field(type => String, { nullable: true })
+  warranty?: string;
 }
