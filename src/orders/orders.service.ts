@@ -5,7 +5,7 @@ import { Part } from 'src/devices/entities/part.entity';
 import { MailService } from 'src/mail/mail.service';
 import { Partner } from 'src/partners/entities/partner.entity';
 import { User, UserRole } from 'src/users/entities/user.entity';
-import { Repository, Raw, Not } from 'typeorm';
+import { Repository, Raw, Not, ILike } from 'typeorm';
 import { CreateOrderInput, CreateOrderOutput } from './dtos/create-order.dto';
 import { DeleteOrderInput, DeleteOrderOutput } from './dtos/delete-order.dto';
 import { EditItemInfoInput, EditItemInfoOutput } from './dtos/edit-item.dto';
@@ -257,7 +257,7 @@ export class OrderService {
 
   async getOrders(
     user: User,
-    { page, take, status, classification }: GetOrdersInput,
+    { page, take, status, classification, searchTerm }: GetOrdersInput,
   ): Promise<GetOrdersOutput> {
     try {
       let orders: Order[];
@@ -271,6 +271,7 @@ export class OrderService {
               status: Not(OrderStatus.Completed),
             }),
             ...(classification && { classification }),
+            projectName: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
           },
           skip: (page - 1) * take,
           take,
@@ -289,6 +290,7 @@ export class OrderService {
                 status: Not(OrderStatus.Completed),
               }),
               ...(classification && { classification }),
+              projectName: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
             },
           ],
           relations: ['partner'],
@@ -315,6 +317,7 @@ export class OrderService {
               status: Not(OrderStatus.Completed),
             }),
             ...(classification && { classification }),
+            projectName: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
           },
           skip: (page - 1) * take,
           take,

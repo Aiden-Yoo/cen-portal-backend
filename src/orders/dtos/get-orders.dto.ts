@@ -16,6 +16,9 @@ export class GetOrdersInput extends PaginationInput {
 
   @Field(type => OrderClassification, { nullable: true })
   classification?: OrderClassification;
+
+  @Field(type => String, { nullable: true })
+  searchTerm?: string;
 }
 
 @ObjectType()
