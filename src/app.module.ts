@@ -37,6 +37,8 @@ import { FirmwareFiles } from './firmwares/entities/firmware-files.entity';
 import { DocumentsModule } from './documents/documents.module';
 import { Documents } from './documents/entities/documents.entity';
 import { DocumentFiles } from './documents/entities/document-files.entity';
+import { Demo } from './demos/entities/demo.entity';
+import { DemosModule } from './demos/demos.module';
 
 @Module({
   imports: [
@@ -98,6 +100,7 @@ import { DocumentFiles } from './documents/entities/document-files.entity';
         FirmwareFiles,
         Documents,
         DocumentFiles,
+        Demo,
       ],
     }),
     GraphQLModule.forRoot({
@@ -131,6 +134,7 @@ import { DocumentFiles } from './documents/entities/document-files.entity';
     WorkaroundsModule,
     FirmwaresModule,
     DocumentsModule,
+    DemosModule,
   ],
   controllers: [],
   providers: [],

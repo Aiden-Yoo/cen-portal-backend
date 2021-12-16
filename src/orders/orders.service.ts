@@ -264,15 +264,35 @@ export class OrderService {
       let totalResults: number;
       if (user.role === UserRole.CEN) {
         [orders, totalResults] = await this.orders.findAndCount({
-          where: {
-            writer: user,
-            ...(status === OrderStatus.Completed && { status }),
-            ...(status === OrderStatus.Notcompleted && {
-              status: Not(OrderStatus.Completed),
-            }),
-            ...(classification && { classification }),
-            projectName: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
-          },
+          where: [
+            {
+              writer: user,
+              ...(status === OrderStatus.Completed && { status }),
+              ...(status === OrderStatus.Notcompleted && {
+                status: Not(OrderStatus.Completed),
+              }),
+              ...(classification && { classification }),
+              projectName: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
+            },
+            {
+              writer: user,
+              ...(status === OrderStatus.Completed && { status }),
+              ...(status === OrderStatus.Notcompleted && {
+                status: Not(OrderStatus.Completed),
+              }),
+              ...(classification && { classification }),
+              salesPerson: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
+            },
+            {
+              writer: user,
+              ...(status === OrderStatus.Completed && { status }),
+              ...(status === OrderStatus.Notcompleted && {
+                status: Not(OrderStatus.Completed),
+              }),
+              ...(classification && { classification }),
+              destination: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
+            },
+          ],
           skip: (page - 1) * take,
           take,
           order: { id: 'DESC' },
@@ -292,6 +312,22 @@ export class OrderService {
               ...(classification && { classification }),
               projectName: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
             },
+            {
+              ...(status === OrderStatus.Completed && { status }),
+              ...(status === OrderStatus.Notcompleted && {
+                status: Not(OrderStatus.Completed),
+              }),
+              ...(classification && { classification }),
+              salesPerson: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
+            },
+            {
+              ...(status === OrderStatus.Completed && { status }),
+              ...(status === OrderStatus.Notcompleted && {
+                status: Not(OrderStatus.Completed),
+              }),
+              ...(classification && { classification }),
+              destination: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
+            },
           ],
           relations: ['partner'],
         });
@@ -310,15 +346,35 @@ export class OrderService {
           };
         }
         [orders, totalResults] = await this.orders.findAndCount({
-          where: {
-            partner,
-            ...(status === OrderStatus.Completed && { status }),
-            ...(status === OrderStatus.Notcompleted && {
-              status: Not(OrderStatus.Completed),
-            }),
-            ...(classification && { classification }),
-            projectName: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
-          },
+          where: [
+            {
+              partner,
+              ...(status === OrderStatus.Completed && { status }),
+              ...(status === OrderStatus.Notcompleted && {
+                status: Not(OrderStatus.Completed),
+              }),
+              ...(classification && { classification }),
+              projectName: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
+            },
+            {
+              partner,
+              ...(status === OrderStatus.Completed && { status }),
+              ...(status === OrderStatus.Notcompleted && {
+                status: Not(OrderStatus.Completed),
+              }),
+              ...(classification && { classification }),
+              salesPerson: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
+            },
+            {
+              partner,
+              ...(status === OrderStatus.Completed && { status }),
+              ...(status === OrderStatus.Notcompleted && {
+                status: Not(OrderStatus.Completed),
+              }),
+              ...(classification && { classification }),
+              destination: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
+            },
+          ],
           skip: (page - 1) * take,
           take,
           order: { id: 'DESC' },
