@@ -39,6 +39,8 @@ import { Documents } from './documents/entities/documents.entity';
 import { DocumentFiles } from './documents/entities/document-files.entity';
 import { Demo } from './demos/entities/demo.entity';
 import { DemosModule } from './demos/demos.module';
+import { RmasModule } from './rmas/rmas.module';
+import { Rma } from './rmas/entities/rma.entity';
 
 @Module({
   imports: [
@@ -101,6 +103,7 @@ import { DemosModule } from './demos/demos.module';
         Documents,
         DocumentFiles,
         Demo,
+        Rma,
       ],
     }),
     GraphQLModule.forRoot({
@@ -135,6 +138,7 @@ import { DemosModule } from './demos/demos.module';
     FirmwaresModule,
     DocumentsModule,
     DemosModule,
+    RmasModule,
   ],
   controllers: [],
   providers: [],
