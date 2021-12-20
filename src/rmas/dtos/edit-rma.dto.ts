@@ -14,6 +14,7 @@ export class EditRmaInput extends PickType(Rma, [
   'deliverDate',
   'deliverDst',
   'deliverSn',
+  'reenactment',
   'person',
   'description',
 ]) {}

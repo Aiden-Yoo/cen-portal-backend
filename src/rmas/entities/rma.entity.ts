@@ -72,6 +72,10 @@ export class Rma extends CoreEntity {
   @IsString()
   deliverSn?: string;
 
+  @Column({ nullable: true, default: false })
+  @Field(type => Boolean, { nullable: true, defaultValue: false })
+  reenactment?: boolean;
+
   @Column({ nullable: true })
   @Field(type => String, { nullable: true })
   @IsOptional()

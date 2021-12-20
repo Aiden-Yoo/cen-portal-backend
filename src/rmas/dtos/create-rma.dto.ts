@@ -13,6 +13,7 @@ export class CreateRmaInput extends PickType(Rma, [
   'deliverDate',
   'deliverDst',
   'deliverSn',
+  'reenactment',
   'person',
   'description',
 ]) {}
