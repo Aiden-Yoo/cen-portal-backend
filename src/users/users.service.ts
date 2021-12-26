@@ -177,6 +177,9 @@ export class UserService {
         1000,
     };
     res.cookie('Authentication', 'Bearer ' + accessToken, accessOption);
+    // res.header('Access-Control-Allow-Origin', '*');
+    // res.header('Access-Control-Allow-Methods', 'GET, POST');
+    // res.header('Access-Control-Allow-Headers', 'Content-Type');
     return accessToken;
   }
 
@@ -196,6 +199,9 @@ export class UserService {
         1000,
     };
     res.cookie('Refresh', 'Bearer ' + refreshToken, refreshOption);
+    // res.header('Access-Control-Allow-Origin', '*');
+    // res.header('Access-Control-Allow-Methods', 'GET, POST');
+    // res.header('Access-Control-Allow-Headers', 'Content-Type');
     return refreshToken;
   }
 
@@ -218,6 +224,9 @@ export class UserService {
       };
       res.cookie('Authentication', '', option);
       res.cookie('Refresh', '', option);
+      // res.header('Access-Control-Allow-Origin', '*');
+      // res.header('Access-Control-Allow-Methods', 'GET, POST');
+      // res.header('Access-Control-Allow-Headers', 'Content-Type');
       return { ok: true };
     } catch (e) {
       return {

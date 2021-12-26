@@ -18,12 +18,16 @@
         "DB_USERNAME": "",
         "DB_PASSWORD": "",
         "DB_NAME": "",
-        "PRIVATE_KEY": "",
         "SVR_DOMAIN": "",
         "TECH_MAIL": "",
         "STOCK_MAIL": "",
         "MAIL_ID": "",
-        "MAIL_PW": ""
+        "MAIL_PW": "",
+        "PRIVATE_KEY": "",
+        "JWT_ACCESS_TOKEN_SECRET": "",
+        "JWT_ACCESS_TOKEN_EXPIRATION_TIME": "",
+        "JWT_REFRESH_TOKEN_SECRET": "",
+        "JWT_REFRESH_TOKEN_EXPIRATION_TIME": ""
       }
     }
   ]
