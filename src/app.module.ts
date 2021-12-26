@@ -117,18 +117,18 @@ import { MaintenanceItemInfo } from './maintenances/entities/maintenance-itemInf
       installSubscriptionHandlers: true,
       autoSchemaFile: true,
       playground: process.env.NODE_ENV !== 'prod',
-      // context: ({ req, connection }) => {
-      //   const TOKEN_KEY = 'x-jwt';
-      //   return {
-      //     token: req ? req.headers[TOKEN_KEY] : connection.context[TOKEN_KEY],
-      //   };
-      // },
-      cors: { origin: true, credentials: true },
-      context: ({ req, res }) => ({ req, res }),
+      context: ({ req, connection }) => {
+        const TOKEN_KEY = 'x-jwt';
+        return {
+          token: req ? req.headers[TOKEN_KEY] : connection.context[TOKEN_KEY],
+        };
+      },
+      // cors: { origin: true, credentials: true },
+      // context: ({ req, res }) => ({ req, res }),
     }),
-    // JwtModule.forRoot({
-    //   privateKey: process.env.PRIVATE_KEY,
-    // }),
+    JwtModule.forRoot({
+      privateKey: process.env.PRIVATE_KEY,
+    }),
     MailModule.forRoot({
       mailId: process.env.MAIL_ID,
       mailPw: process.env.MAIL_PW,

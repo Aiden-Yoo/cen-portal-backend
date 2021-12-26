@@ -39,14 +39,14 @@ export class UserResolver {
     return this.usersService.login(res, loginInput);
   }
 
-  @Mutation(() => LogoutOutput)
-  @Role(['Any'])
-  async logout(
-    @ResGql() res: Response,
-    @AuthUser() user: User,
-  ): Promise<LogoutOutput> {
-    return this.usersService.logout(res, user);
-  }
+  // @Mutation(() => LogoutOutput)
+  // @Role(['Any'])
+  // async logout(
+  //   @ResGql() res: Response,
+  //   @AuthUser() user: User,
+  // ): Promise<LogoutOutput> {
+  //   return this.usersService.logout(res, user);
+  // }
 
   @Query(returns => User)
   @Role(['Any'])

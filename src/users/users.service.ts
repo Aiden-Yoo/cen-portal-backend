@@ -7,7 +7,8 @@ import {
 } from './dtos/create-account.dto';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { User, UserRole } from './entities/user.entity';
-import { JwtService } from '@nestjs/jwt';
+// import { JwtService } from '@nestjs/jwt';
+import { JwtService } from 'src/jwt/jwt.service';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
@@ -145,13 +146,13 @@ export class UserService {
           error: '계정이 잠겼습니다. 관리자에게 문의 바랍니다.',
         };
       }
-      // const token = this.jwtService.sign(user.id);
-      const accessToken = await this.getAccessTokenAndSetCookie(res, user.id);
-      await this.getRefreshTokenAndSetCookie(res, user.id);
+      const token = this.jwtService.sign(user.id);
+      // const accessToken = await this.getAccessTokenAndSetCookie(res, user.id);
+      // await this.getRefreshTokenAndSetCookie(res, user.id);
       return {
         ok: true,
-        // token,
-        token: accessToken,
+        token,
+        // token: accessToken,
       };
     } catch (error) {
       return {
@@ -161,80 +162,71 @@ export class UserService {
     }
   }
 
-  private async getAccessTokenAndSetCookie(res: Response, id: number) {
-    const payload = { id };
-    const accessToken = this.jwtService.sign(payload, {
-      secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
-      expiresIn: `${this.configService.get(
-        'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
-      )}s`,
-    });
-    const accessOption = {
-      path: '/',
-      httpOnly: true,
-      maxAge:
-        Number(this.configService.get('JWT_ACCESS_TOKEN_EXPIRATION_TIME')) *
-        1000,
-    };
-    res.cookie('Authentication', 'Bearer ' + accessToken, accessOption);
-    // res.header('Access-Control-Allow-Origin', '*');
-    // res.header('Access-Control-Allow-Methods', 'GET, POST');
-    // res.header('Access-Control-Allow-Headers', 'Content-Type');
-    return accessToken;
-  }
+  // private async getAccessTokenAndSetCookie(res: Response, id: number) {
+  //   const payload = { id };
+  //   const accessToken = this.jwtService.sign(payload, {
+  //     secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
+  //     expiresIn: `${this.configService.get(
+  //       'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
+  //     )}s`,
+  //   });
+  //   const accessOption = {
+  //     path: '/',
+  //     httpOnly: true,
+  //     maxAge:
+  //       Number(this.configService.get('JWT_ACCESS_TOKEN_EXPIRATION_TIME')) *
+  //       1000,
+  //   };
+  //   res.cookie('Authentication', 'Bearer ' + accessToken, accessOption);
+  //   return accessToken;
+  // }
 
-  private async getRefreshTokenAndSetCookie(res: Response, id: number) {
-    const payload = { id };
-    const refreshToken = this.jwtService.sign(payload, {
-      secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
-      expiresIn: `${this.configService.get(
-        'JWT_REFRESH_TOKEN_EXPIRATION_TIME',
-      )}s`,
-    });
-    const refreshOption = {
-      path: '/',
-      httpOnly: true,
-      maxAge:
-        Number(this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME')) *
-        1000,
-    };
-    res.cookie('Refresh', 'Bearer ' + refreshToken, refreshOption);
-    // res.header('Access-Control-Allow-Origin', '*');
-    // res.header('Access-Control-Allow-Methods', 'GET, POST');
-    // res.header('Access-Control-Allow-Headers', 'Content-Type');
-    return refreshToken;
-  }
+  // private async getRefreshTokenAndSetCookie(res: Response, id: number) {
+  //   const payload = { id };
+  //   const refreshToken = this.jwtService.sign(payload, {
+  //     secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
+  //     expiresIn: `${this.configService.get(
+  //       'JWT_REFRESH_TOKEN_EXPIRATION_TIME',
+  //     )}s`,
+  //   });
+  //   const refreshOption = {
+  //     path: '/',
+  //     httpOnly: true,
+  //     maxAge:
+  //       Number(this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME')) *
+  //       1000,
+  //   };
+  //   res.cookie('Refresh', 'Bearer ' + refreshToken, refreshOption);
+  //   return refreshToken;
+  // }
 
-  async refresh(res: Response, id: number) {
-    const accessToken = await this.getAccessTokenAndSetCookie(res, id);
-    return 'Bearer ' + accessToken;
-  }
+  // async refresh(res: Response, id: number) {
+  //   const accessToken = await this.getAccessTokenAndSetCookie(res, id);
+  //   return 'Bearer ' + accessToken;
+  // }
 
-  async matchCheck(res: Response, id: number) {
-    const accessToken = await this.getAccessTokenAndSetCookie(res, id);
-    return 'Bearer ' + accessToken;
-  }
+  // async matchCheck(res: Response, id: number) {
+  //   const accessToken = await this.getAccessTokenAndSetCookie(res, id);
+  //   return 'Bearer ' + accessToken;
+  // }
 
-  async logout(res: Response, user: User): Promise<LogoutOutput> {
-    try {
-      const option = {
-        path: '/',
-        httpOnly: true,
-        maxAge: 0,
-      };
-      res.cookie('Authentication', '', option);
-      res.cookie('Refresh', '', option);
-      // res.header('Access-Control-Allow-Origin', '*');
-      // res.header('Access-Control-Allow-Methods', 'GET, POST');
-      // res.header('Access-Control-Allow-Headers', 'Content-Type');
-      return { ok: true };
-    } catch (e) {
-      return {
-        ok: false,
-        error: '로그아웃 중 오류가 발생했습니다.',
-      };
-    }
-  }
+  // async logout(res: Response, user: User): Promise<LogoutOutput> {
+  //   try {
+  //     const option = {
+  //       path: '/',
+  //       httpOnly: true,
+  //       maxAge: 0,
+  //     };
+  //     res.cookie('Authentication', '', option);
+  //     res.cookie('Refresh', '', option);
+  //     return { ok: true };
+  //   } catch (e) {
+  //     return {
+  //       ok: false,
+  //       error: '로그아웃 중 오류가 발생했습니다.',
+  //     };
+  //   }
+  // }
 
   async findById(id: number): Promise<UserProfileOutput> {
     try {

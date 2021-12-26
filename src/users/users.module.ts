@@ -10,18 +10,18 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, Verification]),
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get('JWT_ACCESS_TOKEN_SECRET'),
-        signOptions: {
-          expiresIn: `${configService.get(
-            'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
-          )}s`,
-        },
-      }),
-    }),
+    // JwtModule.registerAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   useFactory: async (configService: ConfigService) => ({
+    //     secret: configService.get('JWT_ACCESS_TOKEN_SECRET'),
+    //     signOptions: {
+    //       expiresIn: `${configService.get(
+    //         'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
+    //       )}s`,
+    //     },
+    //   }),
+    // }),
   ],
   providers: [UserResolver, UserService],
   exports: [UserService],
