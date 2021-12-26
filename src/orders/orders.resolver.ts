@@ -5,7 +5,7 @@ import { User } from 'src/users/entities/user.entity';
 import { CreateOrderInput, CreateOrderOutput } from './dtos/create-order.dto';
 import { DeleteOrderInput, DeleteOrderOutput } from './dtos/delete-order.dto';
 import { EditItemInfoInput, EditItemInfoOutput } from './dtos/edit-item.dto';
-import { EditOPrderOutput, EditOrderInput } from './dtos/edit-order.dto';
+import { EditOrderOutput, EditOrderInput } from './dtos/edit-order.dto';
 import { GetOrderInput, GetOrderOutput } from './dtos/get-order.dto';
 import { GetOrdersInput, GetOrdersOutput } from './dtos/get-orders.dto';
 import {
@@ -29,13 +29,13 @@ export class OrderResolver {
     return this.ordersService.createOrder(writer, createOrderInput);
   }
 
-  @Mutation(returns => EditOPrderOutput)
+  @Mutation(returns => EditOrderOutput)
   @Role(['CENSE', 'CEN'])
   async editOrder(
     @AuthUser() user: User,
     @Args('input')
     editOrderInput: EditOrderInput,
-  ): Promise<EditOPrderOutput> {
+  ): Promise<EditOrderOutput> {
     return this.ordersService.editOrder(user, editOrderInput);
   }
 

@@ -9,7 +9,7 @@ import { Repository, Raw, Not, ILike } from 'typeorm';
 import { CreateOrderInput, CreateOrderOutput } from './dtos/create-order.dto';
 import { DeleteOrderInput, DeleteOrderOutput } from './dtos/delete-order.dto';
 import { EditItemInfoInput, EditItemInfoOutput } from './dtos/edit-item.dto';
-import { EditOPrderOutput, EditOrderInput } from './dtos/edit-order.dto';
+import { EditOrderOutput, EditOrderInput } from './dtos/edit-order.dto';
 import { GetOrderInput, GetOrderOutput } from './dtos/get-order.dto';
 import {
   GetOrderItemsInput,
@@ -136,7 +136,7 @@ export class OrderService {
   async editOrder(
     user: User,
     { id: orderId, status }: EditOrderInput,
-  ): Promise<EditOPrderOutput> {
+  ): Promise<EditOrderOutput> {
     try {
       const order = await this.orders.findOne(orderId, {
         relations: ['partner'],

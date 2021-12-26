@@ -7,6 +7,9 @@ import { Classification, Rma } from '../entities/rma.entity';
 
 @InputType()
 export class GetRmasInput extends PaginationInput {
+  @Field(type => String, { nullable: true })
+  rmaStatus?: string;
+
   @Field(type => Classification, { nullable: true })
   classification?: Classification;
 

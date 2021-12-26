@@ -10,6 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { InternalServerErrorException } from '@nestjs/common';
 import { IsBoolean, IsEmail, IsEnum, IsString } from 'class-validator';
 import { Order } from 'src/orders/entities/order.entity';
+import { Maintenance } from 'src/maintenances/entities/maintenance.entity';
 
 export enum UserRole {
   CENSE = 'CENSE',
@@ -83,6 +84,13 @@ export class User extends CoreEntity {
   )
   @Field(type => [Order])
   orders: Order[];
+
+  @OneToMany(
+    type => Maintenance,
+    maintenance => maintenance.writer,
+  )
+  @Field(type => [Maintenance])
+  maintenances: Maintenance[];
 
   @BeforeInsert()
   @BeforeUpdate()

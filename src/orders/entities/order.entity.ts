@@ -111,7 +111,7 @@ export class Order extends CoreEntity {
   @Field(type => Partner, { nullable: true })
   partner?: Partner;
 
-  @RelationId((oeder: Order) => oeder.partner)
+  @RelationId((order: Order) => order.partner)
   partnerId: number;
 
   @Column()

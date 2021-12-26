@@ -17,7 +17,6 @@ import { OrderService } from './orders.service';
       ItemInfo,
       Bundle,
       Partner,
-      Bundle,
       Part,
     ]),
   ],

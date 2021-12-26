@@ -114,6 +114,15 @@ export class DemoService {
             }),
             partner: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
           },
+          {
+            ...(status === DemoStatus.Completed && {
+              status: In([DemoStatus.Return, DemoStatus.Sold, DemoStatus.Loss]),
+            }),
+            ...(status === DemoStatus.Notcompleted && {
+              status: In([DemoStatus.Etc, DemoStatus.Release]),
+            }),
+            model: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
+          },
         ],
       });
       return {

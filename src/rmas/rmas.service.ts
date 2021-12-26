@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, ILike, In } from 'typeorm';
+import { Repository, ILike, In, IsNull, Not } from 'typeorm';
 import { CreateRmaInput, CreateRmaOutput } from './dtos/create-rma.dto';
 import { DeleteRmaInput, DeleteRmaOutput } from './dtos/delete-rma.dto';
 import { EditRmaInput, EditRmaOutput } from './dtos/edit-rma.dto';
@@ -76,6 +76,7 @@ export class RmaService {
   async getRmas({
     page,
     take,
+    rmaStatus,
     classification,
     searchTerm,
   }: GetRmasInput): Promise<GetRmasOutput> {
@@ -86,24 +87,100 @@ export class RmaService {
         order: { createAt: 'DESC' },
         where: [
           {
+            ...(rmaStatus === '선입고' && {
+              returnDate: Not(IsNull()),
+              deliverDate: IsNull(),
+            }),
+            ...(rmaStatus === '선출고' && {
+              returnDate: IsNull(),
+              deliverDate: Not(IsNull()),
+            }),
+            ...(rmaStatus === '완료' && {
+              returnDate: Not(IsNull()),
+              deliverDate: Not(IsNull()),
+            }),
             ...(classification && { classification }),
             projectName: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
           },
           {
+            ...(rmaStatus === '선입고' && {
+              returnDate: Not(IsNull()),
+              deliverDate: IsNull(),
+            }),
+            ...(rmaStatus === '선출고' && {
+              returnDate: IsNull(),
+              deliverDate: Not(IsNull()),
+            }),
+            ...(rmaStatus === '완료' && {
+              returnDate: Not(IsNull()),
+              deliverDate: Not(IsNull()),
+            }),
             ...(classification && { classification }),
             returnSn: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
           },
           {
+            ...(rmaStatus === '선입고' && {
+              returnDate: Not(IsNull()),
+              deliverDate: IsNull(),
+            }),
+            ...(rmaStatus === '선출고' && {
+              returnDate: IsNull(),
+              deliverDate: Not(IsNull()),
+            }),
+            ...(rmaStatus === '완료' && {
+              returnDate: Not(IsNull()),
+              deliverDate: Not(IsNull()),
+            }),
             ...(classification && { classification }),
             deliverSn: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
           },
           {
+            ...(rmaStatus === '선입고' && {
+              returnDate: Not(IsNull()),
+              deliverDate: IsNull(),
+            }),
+            ...(rmaStatus === '선출고' && {
+              returnDate: IsNull(),
+              deliverDate: Not(IsNull()),
+            }),
+            ...(rmaStatus === '완료' && {
+              returnDate: Not(IsNull()),
+              deliverDate: Not(IsNull()),
+            }),
             ...(classification && { classification }),
             returnSrc: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
           },
           {
+            ...(rmaStatus === '선입고' && {
+              returnDate: Not(IsNull()),
+              deliverDate: IsNull(),
+            }),
+            ...(rmaStatus === '선출고' && {
+              returnDate: IsNull(),
+              deliverDate: Not(IsNull()),
+            }),
+            ...(rmaStatus === '완료' && {
+              returnDate: Not(IsNull()),
+              deliverDate: Not(IsNull()),
+            }),
             ...(classification && { classification }),
             deliverDst: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
+          },
+          {
+            ...(rmaStatus === '선입고' && {
+              returnDate: Not(IsNull()),
+              deliverDate: IsNull(),
+            }),
+            ...(rmaStatus === '선출고' && {
+              returnDate: IsNull(),
+              deliverDate: Not(IsNull()),
+            }),
+            ...(rmaStatus === '완료' && {
+              returnDate: Not(IsNull()),
+              deliverDate: Not(IsNull()),
+            }),
+            ...(classification && { classification }),
+            model: searchTerm ? ILike(`%${searchTerm}%`) : ILike(`%`),
           },
         ],
       });

@@ -6,4 +6,4 @@ import { Order } from '../entities/order.entity';
 export class EditOrderInput extends PickType(Order, ['id', 'status']) {}
 
 @ObjectType()
-export class EditOPrderOutput extends CoreOutput {}
+export class EditOrderOutput extends CoreOutput {}

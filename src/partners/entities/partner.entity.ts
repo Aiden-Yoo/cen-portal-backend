@@ -1,6 +1,7 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
+import { Maintenance } from 'src/maintenances/entities/maintenance.entity';
 import { Order } from 'src/orders/entities/order.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { Contact } from './contact.entity';
@@ -40,4 +41,12 @@ export class Partner extends CoreEntity {
   )
   @Field(type => [Order], { nullable: true })
   orders?: Order[];
+
+  @OneToMany(
+    type => Maintenance,
+    maintenance => maintenance.distPartner,
+    { nullable: true },
+  )
+  @Field(type => [Maintenance], { nullable: true })
+  maintenances?: Maintenance[];
 }

@@ -41,6 +41,10 @@ import { Demo } from './demos/entities/demo.entity';
 import { DemosModule } from './demos/demos.module';
 import { RmasModule } from './rmas/rmas.module';
 import { Rma } from './rmas/entities/rma.entity';
+import { MaintanencesModule } from './maintenances/maintenances.module';
+import { Maintenance } from './maintenances/entities/maintenance.entity';
+import { MaintenanceItem } from './maintenances/entities/maintenance-item.entity';
+import { MaintenanceItemInfo } from './maintenances/entities/maintenance-itemInfo.entity';
 
 @Module({
   imports: [
@@ -104,6 +108,9 @@ import { Rma } from './rmas/entities/rma.entity';
         DocumentFiles,
         Demo,
         Rma,
+        Maintenance,
+        MaintenanceItem,
+        MaintenanceItemInfo,
       ],
     }),
     GraphQLModule.forRoot({
@@ -139,6 +146,7 @@ import { Rma } from './rmas/entities/rma.entity';
     DocumentsModule,
     DemosModule,
     RmasModule,
+    MaintanencesModule,
   ],
   controllers: [],
   providers: [],
