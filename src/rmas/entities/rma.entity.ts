@@ -8,12 +8,18 @@ import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { Column, Entity } from 'typeorm';
 
-export enum Classification {
+export enum RmaClassification {
   RMA = 'RMA',
   DoA = 'DoA',
 }
+export enum Reenactment {
+  True = '재현됨',
+  False = '재현불가',
+  Later = '추후확인',
+}
 
-registerEnumType(Classification, { name: 'Classification' });
+registerEnumType(RmaClassification, { name: 'RmaClassification' });
+registerEnumType(Reenactment, { name: 'Reenactment' });
 
 @InputType('RmaInputType', { isAbstract: true })
 @ObjectType()
@@ -21,12 +27,12 @@ registerEnumType(Classification, { name: 'Classification' });
 export class Rma extends CoreEntity {
   @Column({
     type: 'enum',
-    enum: Classification,
-    default: Classification.RMA,
+    enum: RmaClassification,
+    default: RmaClassification.RMA,
   })
-  @Field(type => Classification, { nullable: true })
-  @IsEnum(Classification)
-  classification?: Classification;
+  @Field(type => RmaClassification, { nullable: true })
+  @IsEnum(RmaClassification)
+  classification?: RmaClassification;
 
   @Column()
   @Field(type => String, { nullable: true })
@@ -72,9 +78,14 @@ export class Rma extends CoreEntity {
   @IsString()
   deliverSn?: string;
 
-  @Column({ nullable: true, default: false })
-  @Field(type => Boolean, { nullable: true, defaultValue: false })
-  reenactment?: boolean;
+  @Column({ type: 'enum', enum: Reenactment, default: Reenactment.Later })
+  @Field(type => Reenactment, {
+    nullable: true,
+    defaultValue: Reenactment.Later,
+  })
+  @IsOptional()
+  @IsEnum(Reenactment)
+  reenactment?: Reenactment;
 
   @Column({ nullable: true })
   @Field(type => String, { nullable: true })
@@ -85,4 +96,12 @@ export class Rma extends CoreEntity {
   @Column({ nullable: true })
   @Field(type => String, { nullable: true })
   description?: string;
+
+  @Column({ nullable: true })
+  @Field(type => String, { nullable: true })
+  address?: string;
+
+  @Column({ nullable: true })
+  @Field(type => String, { nullable: true })
+  symptom?: string;
 }

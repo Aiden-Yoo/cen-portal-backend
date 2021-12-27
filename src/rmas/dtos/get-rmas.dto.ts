@@ -3,15 +3,15 @@ import {
   PaginationInput,
   PaginationOutput,
 } from 'src/common/dtos/pagination.dto';
-import { Classification, Rma } from '../entities/rma.entity';
+import { RmaClassification, Rma } from '../entities/rma.entity';
 
 @InputType()
 export class GetRmasInput extends PaginationInput {
   @Field(type => String, { nullable: true })
   rmaStatus?: string;
 
-  @Field(type => Classification, { nullable: true })
-  classification?: Classification;
+  @Field(type => RmaClassification, { nullable: true })
+  classification?: RmaClassification;
 
   @Field(type => String, { nullable: true })
   searchTerm?: string;

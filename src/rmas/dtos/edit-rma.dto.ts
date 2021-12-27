@@ -17,6 +17,8 @@ export class EditRmaInput extends PickType(Rma, [
   'reenactment',
   'person',
   'description',
+  'address',
+  'symptom',
 ]) {}
 
 @ObjectType()

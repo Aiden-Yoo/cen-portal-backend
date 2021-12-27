@@ -5,7 +5,7 @@ import { CreateRmaInput, CreateRmaOutput } from './dtos/create-rma.dto';
 import { DeleteRmaInput, DeleteRmaOutput } from './dtos/delete-rma.dto';
 import { EditRmaInput, EditRmaOutput } from './dtos/edit-rma.dto';
 import { GetRmasInput, GetRmasOutput } from './dtos/get-rmas.dto';
-import { Classification, Rma } from './entities/rma.entity';
+import { Rma } from './entities/rma.entity';
 
 @Injectable()
 export class RmaService {

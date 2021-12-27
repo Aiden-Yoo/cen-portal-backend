@@ -20,6 +20,15 @@ import {
 import { MaintenanceItemInfo } from './maintenance-itemInfo.entity';
 import { MaintenanceItem } from './maintenance-item.entity';
 
+export enum MaintenanceClassification {
+  CSTY = 'CSTY',
+  CSTC = 'CSTC',
+}
+
+registerEnumType(MaintenanceClassification, {
+  name: 'MaintenanceClassification',
+});
+
 @InputType('RmaInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
@@ -96,4 +105,25 @@ export class Maintenance extends CoreEntity {
   )
   @Field(type => [MaintenanceItemInfo], { nullable: true })
   maintenanceItemInfos?: MaintenanceItemInfo[];
+
+  @Column({
+    type: 'enum',
+    enum: MaintenanceClassification,
+    default: MaintenanceClassification.CSTC,
+  })
+  @Field(type => MaintenanceClassification, {
+    nullable: true,
+    defaultValue: MaintenanceClassification.CSTC,
+  })
+  @IsOptional()
+  @IsEnum(MaintenanceClassification)
+  classification?: MaintenanceClassification;
+
+  @Column({ nullable: true })
+  @Field(type => String, { nullable: true })
+  inCharge?: string;
+
+  @Column({ nullable: true })
+  @Field(type => String, { nullable: true })
+  contact?: string;
 }

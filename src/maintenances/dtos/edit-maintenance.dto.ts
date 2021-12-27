@@ -11,6 +11,9 @@ export class EditMaintenanceInput extends PickType(Maintenance, [
   'startDate',
   'endDate',
   'description',
+  'classification',
+  'inCharge',
+  'contact',
 ]) {}
 
 @ObjectType()

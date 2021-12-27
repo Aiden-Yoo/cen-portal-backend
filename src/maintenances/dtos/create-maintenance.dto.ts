@@ -20,6 +20,9 @@ export class CreateMaintenanceInput extends PickType(Maintenance, [
   'startDate',
   'endDate',
   'description',
+  'classification',
+  'inCharge',
+  'contact',
 ]) {
   @Field(type => Int)
   distPartnerId: number;
