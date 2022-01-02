@@ -199,6 +199,7 @@ export class RmaService {
   }
 
   async rmaStatus(rma: Rma): Promise<string> {
+    if (!rma.returnDate && !rma.deliverDate) return '임시';
     if (rma.returnDate && !rma.deliverDate) return '선입고';
     if (!rma.returnDate && rma.deliverDate) return '선출고';
     if (rma.returnDate && rma.deliverDate) return '완료';
